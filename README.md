@@ -35,7 +35,7 @@ First of all checkout the code, setup the virtual environment and activate it:
     $ virtualenv --python=python2.6 --no-site-package getpenelope.buildout
     $ cd getpenelope.buildout 
     $ . ./bin/activate
-    $ python bootstrap.py -v 1.5.2 -c offline.cfg
+    $ python bootstrap.py -v 1.5.2 -c development.cfg
 
 Modify or extends development.cfg with
 
