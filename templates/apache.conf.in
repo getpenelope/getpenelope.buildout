@@ -1,0 +1,58 @@
+WSGIApplicationGroup %{GLOBAL}
+
+<VirtualHost *:${parts.settings['port']}>
+
+ServerName ${parts.settings['domain']}
+ServerAdmin webmaster@redturtle.it
+
+CustomLog /var/log/apache2/access-${parts.settings['domain']}.log combined
+ErrorLog /var/log/apache2/error-${parts.settings['domain']}.log
+LogLevel warn
+
+RewriteEngine On
+
+WSGIDaemonProcess ${parts.settings['projectname']} processes=2 threads=20 display-name=%{GROUP}
+WSGIScriptAlias / ${parts.buildout['directory']}/parts/mod_wsgi/wsgi
+WSGIProcessGroup ${parts.settings['projectname']}
+WSGIPassAuthorization On
+
+Alias /svn /var/www/svn
+
+# apt-get install libapache2-svn
+# a2enmod dav_svn
+# a2enmod authz_svn
+<IfModule mod_dav_svn.c>
+    <Location /svn>
+      DAV svn
+      # any "/svn/foo" URL will map to a repository /usr/local/svn/foo
+      SVNParentPath ${parts.buildout['directory']}/var/svnenvs
+
+      # Authorization: Path-based access control
+
+      # IDEA: utilizzare una pipe unix...
+
+      # buildout's authz.pipe part
+      # mkfifo ${parts.buildout['directory']}/var/authz.pipe
+      # chmod 750 ${parts.buildout['directory']}/var/authz.pipe
+      # chgrp www-data ${parts.buildout['directory']}/var/authz.pipe
+      # supervisor's authz program
+      # bin/authz --pipe=${parts.buildout['directory']}/var/authz.pipe
+      # AuthzSVNAccessFile ${parts.buildout['directory']}/var/authz.pipe
+
+      # ... NON FUNZIONA ... PER ORA SI USA UN SYNC VIA CRON
+
+      # bin/authz > ${parts.buildout['directory']}/var/authz.ini
+      AuthzSVNAccessFile ${parts.buildout['directory']}/var/authz.ini
+
+      AuthType Basic
+      AuthName "SVN Authentication"
+      AuthBasicProvider wsgi
+      WSGIAuthUserScript ${parts.buildout['directory']}/bin/auth_wsgi
+      Require valid-user
+
+    </Location>
+
+    CustomLog $${APACHE_LOG_DIR}/${parts.settings['domain']}_svn.log "%t %u %{SVN-ACTION}e" env=SVN-ACTION
+</IfModule>
+
+</VirtualHost>

@@ -1,0 +1,282 @@
+
+[account-manager]
+account_changes_notify_addresses = 
+
+[attachment]
+max_size = 10485760
+render_unsafe_content = false
+
+[browser]
+color_scale = True
+downloadable_paths = /trunk, /branches/*, /tags/*
+hide_properties = svk:merge
+intermediate_color = 
+intermediate_point = 
+newest_color = (255, 136, 136)
+oldest_color = (136, 136, 255)
+oneliner_properties = trac:summary
+render_unsafe_content = false
+wiki_properties = trac:description
+
+[changeset]
+max_diff_bytes = 10000000
+max_diff_files = 0
+wiki_format_messages = true
+
+[components]
+autocompleteusers.autocompleteusers = enabled
+batchmod.web_ui.* = enabled
+customfieldadmin.* = enabled
+dynfields.rules.* = enabled
+dynfields.web_ui.* = enabled
+privatecomments.privatecomments.* = enabled
+sensitivetickets.* = enabled
+themeengine.admin.* = enabled
+themeengine.api.* = enabled
+themeengine.web_ui.* = enabled
+ticketrelations.* = enabled
+tracopt.perm.config_perm_provider.ExtraPermissionsProvider = enabled
+trac.por.* = enabled
+trac.por.users.* = enabled
+tracrpc.api.xmlrpcsystem = enabled
+tracrpc.ticket.* = enabled
+tracrpc.web_ui.rpcweb = enabled
+tracrpc.xml_rpc.xmlrpcprotocol = enabled
+tracwysiwyg.wysiwygmodule = enabled
+
+[extra-permissions]
+EXTRA_TIMEENTRY = TIME_ENTRY_ADD
+
+[header_logo]
+alt = (please configure the [header_logo] section in trac.ini)
+height = -1
+link = 
+src = site/your_project_logo.png
+width = -1
+
+[inherit]
+plugins_dir =
+templates_dir = ${parts.buildout['directory']}/trac-templates
+
+[logging]
+log_file = trac.log
+log_level = INFO
+log_type = file
+
+[metanav]
+logout = disabled
+
+[milestone]
+stats_provider = DefaultTicketGroupStatsProvider
+
+[milestone-groups]
+active = *
+active.css_class = open
+active.order = 1
+closed = closed
+closed.order = 0
+closed.overall_completion = true
+closed.query_args = group=resolution
+new = new,reopened
+new.order = 2
+
+[mimeviewer]
+max_preview_size = 262144
+mime_map = text/x-dylan:dylan,text/x-idl:ice,text/x-ada:ads:adb
+pygments_default_style = trac
+pygments_modes = 
+tab_width = 8
+treat_as_binary = application/octet-stream,application/pdf,application/postscript,application/msword,application/rtf,
+
+[notification]
+admit_domains =
+always_notify_updater = true
+always_notify_owner = true
+always_notify_reporter = true
+ambiguous_char_width = single
+email_sender = SmtpEmailSender
+ignore_domains =
+mime_encoding = none
+replyto = info@redturtle.net
+sendmail_path = sendmail
+smtp_always_bcc =
+smtp_always_cc =
+smtp_default_domain =
+smtp_enabled = true
+smtp_from = info@redturtle.net
+smtp_from_name = RedTurtle Team
+smtp_password =
+smtp_port = 25
+smtp_replyto = info@redturtle.net
+smtp_server = localhost
+smtp_subject_prefix = __default__
+smtp_user =
+ticket_subject_template = $$prefix #$$ticket.id: $$summary
+use_public_cc = false
+use_short_addr = false
+use_tls = false
+
+[project]
+admin =
+admin_trac_url = .
+footer = Visit the Trac open source project at<br /><a href="http://trac.edgewall.org/">http://trac.edgewall.org/</a>
+icon = common/trac.ico
+url =
+
+[query]
+default_anonymous_query = status!=closed&cc~=$$USER
+default_query = status!=closed&owner=$$USER
+items_per_page = 100
+ticketlink_query = ?status=!closed
+
+[report]
+items_per_page = 100
+items_per_page_rss = 0
+
+[revisionlog]
+default_log_limit = 100
+
+[roadmap]
+stats_provider = DefaultTicketGroupStatsProvider
+
+[search]
+min_query_length = 3
+
+[svn]
+branches = trunk,branches/*
+tags = tags/*
+
+[theme]
+theme = por
+
+[ticket]
+default_cc =
+default_component =
+default_description =
+default_keywords =
+default_milestone = 
+default_owner =
+default_priority = major
+default_resolution = fixed
+default_severity =
+default_summary =
+default_version = 
+default_type = defect
+max_comment_size = 262144
+max_description_size = 262144
+workflow = ConfigurableTicketWorkflow
+preserve_newlines = default
+restrict_owner = true
+
+[ticket-custom]
+blockedby = text
+blockedby.label = Blocked By
+blocking = text
+blocking.label = Blocking
+customerrequest = select
+customerrequest.label = Customer Request
+customerrequest.options = 
+esogeno = checkbox
+esogeno.label = Ticket aperto dal Cliente
+esogeno.value = false
+fasesviluppo = select
+fasesviluppo.label = Fase sviluppo
+fasesviluppo.options = |In lavorazione|Per lo staging|In staging|Per la produzione|In produzione
+issuetype = select
+issuetype.label = Natura del problema
+issuetype.options = |sistemistica|funzionalità|design (grafica, layout...)|prestazioni|mi aspettavo che...
+milestone.invalid_if =
+qa1 = select
+qa1.label = Verifica soluzione
+qa1.options = non attuata|attuata
+qa2 = select
+qa2.label = Efficacia soluzione
+qa2.options = non efficace|efficace
+sensitive = checkbox
+sensitive.label = Sensitive
+sensitive.show_if_group = administrator|developer
+sensitive.value = 0
+
+
+[trac]
+auth_cookie_lifetime = 0
+auth_cookie_path = 
+authz_file = 
+authz_module_name = 
+auto_preview_timeout = 2.0
+auto_reload = False
+backup_dir = db
+base_url =
+check_auth_ip = false
+debug_sql = False
+default_charset = iso-8859-15
+default_handler = WikiModule
+default_language = 
+default_timezone = 
+genshi_cache_size = 128
+htdocs_location = 
+ignore_auth_case = false
+mainnav = wiki,timeline,roadmap,browser,tickets,newticket,search
+metanav = login,logout,prefs,help,about
+mysqldump_path = mysqldump
+never_obfuscate_mailto = false
+permission_policies = SensitiveTicketsPolicy, DefaultPermissionPolicy, LegacyAttachmentPolicy
+permission_store = PorPermissionStore
+pg_dump_path = pg_dump
+resizable_textareas = true
+secure_cookies = False
+show_email_addresses = true
+show_ip_addresses = false
+timeout = 20
+use_base_url_for_redirect = False
+repository_dir =
+repository_sync_per_request = 
+repository_type = svn
+
+[timeline]
+abbreviated_messages = True
+changeset_collapse_events = false
+changeset_long_messages = false
+changeset_show_files = 0
+default_daysback = 30
+max_daysback = 90
+newticket_formatter = oneliner
+ticket_show_details = false
+
+[ticket-workflow]
+accept = new,reviewing -> assigned
+accept.operations = set_owner_to_self
+accept.permissions = TICKET_MODIFY
+leave = * -> *
+leave.default = 1
+leave.operations = leave_status
+reassign = new,assigned,accepted,reopened -> assigned
+reassign.operations = set_owner
+reassign.permissions = TICKET_MODIFY
+reassign_reviewing = reviewing -> *
+reassign_reviewing.name = reassign review
+reassign_reviewing.operations = set_owner
+reassign_reviewing.permissions = TICKET_MODIFY
+reopen = closed -> reopened
+reopen.operations = del_resolution
+reopen.permissions = TICKET_CREATE
+resolve = new,assigned,reopened,reviewing -> closed
+resolve.operations = set_resolution
+resolve.permissions = TICKET_MODIFY
+review = new,assigned,reopened -> reviewing
+review.operations = set_owner
+review.permissions = TICKET_MODIFY
+revoke_ownership = new,assigned -> new
+revoke_ownership.operations = del_owner
+revoke_ownership.permissions = TICKET_MODIFY
+
+[versioncontrol]
+allowed_repository_dir_prefixes = 
+
+[wiki]
+ignore_missing_pages = false
+max_size = 1048576
+render_unsafe_content = false
+safe_schemes = cvs,file,ftp,git,irc,http,https,news,sftp,smb,ssh,svn,svn+ssh
+split_page_names = false
+

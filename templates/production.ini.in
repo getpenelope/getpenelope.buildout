@@ -1,0 +1,147 @@
+[app:dashboard]
+use = egg:por.dashboard
+pyramid.reload_templates = true
+pyramid.debug_authorization = false
+pyramid.debug_notfound = false
+pyramid.debug_routematch = false
+pyramid.debug_templates = false
+default_locale_name = en
+sa.dashboard.url =  ${parts.dashboard['db_string']}
+mail.host = localhost
+mail.port = 25
+mail.from_address = admin@${parts.settings['google']}
+project_name = ${parts.settings['projectname']}
+
+por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
+por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
+por.dashboard.google_domain = ${parts.settings['google']}
+pyramid.includes = pyramid_exclog pyramid_fanstatic
+
+session.type = file
+session.data_dir = ${parts.buildout['directory']}/var/data/sessions/data
+session.lock_dir = ${parts.buildout['directory']}/var/data/sessions/lock
+session.key = dashboard
+session.secret = whatever
+session.cookie_on_exception = true
+cache.regions = default_term, calculate_matrix
+cache.type = memory
+cache.calculate_matrix.expire = 3600
+cache.default_term.expire = 300
+available_themes = overcast
+
+velruse.store = velruse.store.sqlstore.SQLStore
+velruse.store.url = ${parts.dashboard['db_string']}
+velruse.providers = por.dashboard.security.openid2
+velruse.openid.store = openid.store.memstore.MemoryStore
+velruse.openid.realm = ${parts.settings['url']}
+
+fanstatic.bottom = true
+fanstatic.debug = false
+fanstatic.versioning = true
+fanstatic.minified = true
+
+[filter:weberror]
+use = egg:WebError#main
+debug = true
+
+[filter:gzip]
+use = egg:Paste#gzip
+compress_level = 6
+
+[filter:proxy-prefix]
+use = egg:PasteDeploy#prefix
+scheme = https
+
+[pipeline:main]
+pipeline =
+    proxy-prefix
+    weberror
+    tm
+    who
+    beaker
+    gzip
+    applications
+
+[composite:applications]
+use = egg:Paste#urlmap
+/ = dashboard
+/trac = trac
+ 
+[pipeline:trac]
+pipeline = fanstatic tracs
+
+[filter:fanstatic]
+use = egg:fanstatic#fanstatic
+
+[app:tracs]
+use = egg:WSGITrac#tracs
+path = ${parts.buildout['directory']}/var/tracenvs
+
+[filter:tm]
+use = egg:repoze.tm2#tm
+commit_veto = repoze.tm:default_commit_veto
+
+[filter:beaker]
+use = egg:Beaker#beaker_session
+
+[filter:who]
+use = egg:repoze.who#config
+config_file = ${parts.buildout['directory']}/etc/who.ini
+#log_file = stdout
+
+[server:main]
+use = egg:Paste#http
+host = ${parts.settings['host']}
+port = ${parts.settings['port']}
+
+
+# Begin logging configuration
+
+[loggers]
+keys = root, penelope, exc_logger
+
+[handlers]
+keys = console, penelope, exc_handler
+
+[formatters]
+keys = generic, exc_formatter
+
+[logger_root]
+level = WARN
+handlers = console
+
+[logger_penelope]
+level = DEBUG
+handlers = penelope
+qualname = penelope
+
+[logger_exc_logger]
+level = ERROR
+handlers = exc_handler
+qualname = exc_logger
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = WARN
+formatter = generic
+
+[handler_penelope]
+class = FileHandler
+args = ('${parts.buildout['directory']}/var/log/penelope_debug.log','a')
+level = DEBUG
+formatter = generic
+
+[handler_exc_handler]
+class = FileHandler
+args = ('${parts.buildout['directory']}/var/log/penelope_exception.log',)
+level = ERROR
+formatter = exc_formatter
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+
+[formatter_exc_formatter]
+format = %(asctime)s %(message)s
+
+# End logging configuration
