@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/getpenelope/getpenelope.buildout.png)](https://travis-ci.org/getpeneloep/getpeneloep.buildout)
+
 Setup with virtualenv under Debian
 ==================================
 
