@@ -1,5 +1,11 @@
 alembic.ini
 buildout.cfg
+.installed.cfg
+.mr.developer.cfg
 etc
 lib
 src
+bin
+develop-eggs
+include
+var
