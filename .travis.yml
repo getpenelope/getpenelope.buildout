@@ -6,5 +6,5 @@ before_script:
 install:
   - python bootstrap.py -v 1.5.2 -c travis.cfg
   - bin/buildout -c travis.cfg
-# TODO: testrunner here (?)
+# TODO: testrunner here (??)
 script: bin/populate_with_dummies etc/development.ini
