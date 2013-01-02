@@ -14,7 +14,7 @@ The following is the minimal set of packages needed on the server (with older De
                 postgresql-server-dev-all libxslt1-dev \
                 libxml2-dev make gcc g++ subversion python-virtualenv
 
-Next, as user ''postgres'' create the database, a user and setup a password (in the following we assume that the database and the user are called ''dashboard'', and we setup a silly ''mypassword'').
+Next, as user ''postgres'' create the database, a user and setup a password (in the following we assume that the database and the user are called ''dashboard'', and we setup a silly ''mypassword''):
 
     # su - postgres 
     $ createuser --no-createdb --no-createrole --no-superuser --pwprompt dashboard
@@ -39,12 +39,12 @@ First of all checkout the code, setup the virtual environment and activate it:
     $ . ./bin/activate
     $ python bootstrap.py -v 1.5.2 -c development.cfg
 
-Modify or extend development.cfg adding the following stanza
+Modify or extend development.cfg adding the following stanza:
 
     [dashboard] 
     db_string = postgresql://dashboard:mypassword@localhost:5432/dashboard
 
-somewhere in the file, and then run
+somewhere in the file, and then run:
 
     $ bin/buildout -c development.cfg 
 
