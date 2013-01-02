@@ -3,18 +3,18 @@
 Setup with virtualenv under Debian
 ==================================
 
-The following procedure has been tested with a clean '''64bit Debian Wheezy''' server: it should work ''as is'' under Squeeze (or perhaps even Lenny) and with 32bit architectures. The same procedue should apply as is with recent Ubuntu servers, and with minimal changes for other Linux distributions (mainly, the names and the procedure to install the server environment).
+The following procedure has been tested with a clean ''64bit Debian Wheezy'' server: it should work ''as is'' under Squeeze (or perhaps even Lenny) and with 32bit architectures. The same procedue should also apply to recent Ubuntu servers. It should also work with minimal changes for other Linux distributions (namely, the package names and the procedures to install the server environment).
 
 Setup the server environment
 ----------------------------
 
-The following is the minimal set of packages needed on the server (with older Debian releases you can use the system PostgreSQL, there are no critical dependencies from 9.1):
+The following is the minimal set of packages needed on the server (with older Debian releases you can use the PostgreSQL provided by the system, it is not important to have the 9.1 release):
 
     # apt-get install postgresql-9.1 python-all-dev python-setuptools \
                 postgresql-server-dev-all libxslt1-dev \
                 libxml2-dev make gcc g++ subversion python-virtualenv
 
-Then as user ''postgres'' create the database, a user and setup a password (in the following we assume that the database and th user are called '''dashboard''', and we setup a silly ''''mypassword'''').
+Next, as user ''postgres'' create the database, a user and setup a password (in the following we assume that the database and the user are called ''dashboard'', and we setup a silly ''mypassword'').
 
     # su - postgres 
     $ createuser --no-createdb --no-createrole --no-superuser --pwprompt dashboard
@@ -39,33 +39,33 @@ First of all checkout the code, setup the virtual environment and activate it:
     $ . ./bin/activate
     $ python bootstrap.py -v 1.5.2 -c development.cfg
 
-Modify or extends development.cfg with
+Modify or extend development.cfg adding the following stanza
 
     [dashboard] 
     db_string = postgresql://dashboard:mypassword@localhost:5432/dashboard
 
-somewhere in that file and then run.
+somewhere in the file, and then run
 
     $ bin/buildout -c development.cfg 
 
 Running Penelope
 ----------------
 
-You can first populate the system with some dummy data. The first option is to use ''populate_with_dummies'':
+You can populate the system with some dummy data. The first option is to use ''populate_with_dummies'':
 
     $ ./bin/populate_with_dummies etc/development.ini
 
-that will create a lot of dummy data (users, projects, customers, time entries, etcetera), while ''populate_penelope'':
+that will create a lot of dummy entries (users, projects, customers, time entries, etcetera), the second option is to use ''populate_penelope'':
 
     $ ./bin/populate_penelope etc/development.ini
 
-with create only minimal data (use just one of them, if you really want).
+which will create just a minimal dataset (use only one of them, not both, and only if you want to ''pollute'' penelope with mocks).
 
-Last you can go straightforwardly to the server login page running:
+Now you can run penelope:
 
     $ ./bin/dashboard serve etc/development.ini
 
-and logging in with:
+and log in as:
 
     john@example.com/john@example.com  (Administrator)
     customer@example.com/customer@example.com (Customer)
