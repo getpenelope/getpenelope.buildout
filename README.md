@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/getpenelope/getpenelope.buildout.png)](https://travis-ci.org/getpeneloep/getpeneloep.buildout)
+[![Build Status](https://travis-ci.org/getpenelope/getpenelope.buildout.png)](https://travis-ci.org/getpenelope/getpenelope.buildout)
 
 Setup with virtualenv under Debian
 ==================================
