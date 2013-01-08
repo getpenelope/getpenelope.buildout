@@ -1,31 +1,15 @@
-$ticket_body_hdr
+$ticket_body_hdr - ${ticket.link}
+
 {% choose ticket.new %}\
 {%   when True %}\
 $ticket.description
 {%   end %}\
 {%   otherwise %}\
 {%     if changes_body %}\
-${_('Changes (by %(author)s):', author=change.author)}
+${_('Changes (by %(author)s):', author=change.author)} 
 
-$changes_body
-{%     end %}\
-{%     if changes_descr %}\
-{%       if not changes_body and not change.comment and change.author %}\
-${_('Description changed by %(author)s:', author=change.author)}
-{%       end %}\
-$changes_descr
-{%     end %}\
-{%     if change.comment %}\
-
-${changes_body and _('Comment:') or _('Comment (by %(author)s):', author=change.author)}
-
-$change.comment
-{%     end %}\
-{%   end %}\
-{% end %}\
-
-${_('Ticket URL: <%(link)s>', link=ticket.link)}
-$project.name <${project.url or abs_href()}>
-$project.descr
+$changes_body{%     end %}{%     if change.comment %}${changes_body and _(' * comment: ') or _('Comment (by %(author)s):\n', author=change.author)}${change.comment.strip()}
+{%     end %}{%   end %}{% end %}\
 
 $ticket_props
+Trac: $project.name <${project.url or abs_href()}>
