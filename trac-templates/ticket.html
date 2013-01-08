@@ -235,7 +235,9 @@ ${comment}</textarea>
               </legend>
               <div>
                 <div py:if="can_modify or can_create">
-                  <div class="ticketfields-label"><label for="field-summary">Summary:</label></div>
+                  <div class="ticketfields-label"><label for="field-summary">
+                      <i class="icon-exclamation-sign" title="Field is required"></i>
+                      Summary:</label></div>
                   <div>
                     <input type="text" id="field-summary" name="field_summary"
                            value="$ticket.summary" size="70" />
@@ -278,8 +280,9 @@ ${ticket.description}</textarea>
                      class="ticketfields-block ${req.ticketfields_classes.get(field.name, '')}">
                   <div class="ticketfields-label">
                     <label for="field-${field.name}" py:if="field"
-                           py:strip="field.type == 'radio'" i18n:msg="field">${
-                      field.edit_label or field.label or field.name}:</label>
+                      py:strip="field.type == 'radio'" i18n:msg="field"><i 
+                        class="icon-exclamation-sign" title="Field is required" py:if="field.name in ['customerrequest']"></i>
+                      ${field.edit_label or field.label or field.name}:</label>
                   </div>
                   <div>
                     <py:choose test="field.type" py:if="field">
