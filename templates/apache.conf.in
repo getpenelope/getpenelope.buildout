@@ -47,7 +47,7 @@ Alias /svn /var/www/svn
       AuthType Basic
       AuthName "SVN Authentication"
       AuthBasicProvider wsgi
-      WSGIAuthUserScript ${parts.buildout['directory']}/etc/auth.wsgi
+      WSGIAuthUserScript ${parts.buildout['directory']}/bin/auth_wsgi
       Require valid-user
 
     </Location>
