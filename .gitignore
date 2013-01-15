@@ -9,3 +9,4 @@ bin
 develop-eggs
 include
 var
+svn_import.csv
