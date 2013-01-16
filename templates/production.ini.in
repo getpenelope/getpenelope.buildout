@@ -50,7 +50,7 @@ compress_level = 6
 
 [filter:proxy-prefix]
 use = egg:PasteDeploy#prefix
-scheme = https
+scheme = ${parts.settings['prefix']}
 
 [pipeline:main]
 pipeline =

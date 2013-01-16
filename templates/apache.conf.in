@@ -11,7 +11,7 @@ LogLevel warn
 
 RewriteEngine On
 
-WSGIDaemonProcess ${parts.settings['projectname']} processes=2 threads=20 display-name=%{GROUP}
+WSGIDaemonProcess ${parts.settings['projectname']} user=${parts.apache['user']} group=${parts.apache['user']} processes=2 threads=20 display-name=%{GROUP}
 WSGIScriptAlias / ${parts.buildout['directory']}/parts/mod_wsgi/wsgi
 WSGIProcessGroup ${parts.settings['projectname']}
 WSGIPassAuthorization On
