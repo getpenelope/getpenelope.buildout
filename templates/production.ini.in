@@ -72,6 +72,9 @@ pipeline = fanstatic tracs
 
 [filter:fanstatic]
 use = egg:fanstatic#fanstatic
+versioning = true
+bottom = true
+minified = true
 
 [app:tracs]
 use = egg:WSGITrac#tracs
@@ -87,7 +90,6 @@ use = egg:Beaker#beaker_session
 [filter:who]
 use = egg:repoze.who#config
 config_file = ${parts.buildout['directory']}/etc/who.ini
-#log_file = stdout
 
 [server:main]
 use = egg:Paste#http
