@@ -11,14 +11,12 @@ mail.host = localhost
 mail.port = 8025
 mail.from_address = admin@${parts.settings['google']}
 
+por.svn.url = ${parts.settings['svnurl']}
 project_name = ${parts.settings['projectname']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
 por.dashboard.google_domain = ${parts.settings['google']}
 pyramid.includes = pyramid_debugtoolbar pyramid_fanstatic
-#por.dashboard.logo.img_src = 
-#por.dashboard.logo.href = 
-#por.dashboard.logo.label = 
 
 session.type = file
 session.data_dir = ${parts.buildout['directory']}/var/data/sessions/data

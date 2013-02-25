@@ -9,9 +9,10 @@ default_locale_name = en
 sa.dashboard.url =  ${parts.dashboard['db_string']}
 mail.host = localhost
 mail.port = 25
-mail.from_address = admin@${parts.settings['google']}
+mail.from_address = noreply@${parts.settings['google']}
 project_name = ${parts.settings['projectname']}
 
+por.svn.url = ${parts.settings['svnurl']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
 por.dashboard.google_domain = ${parts.settings['google']}
