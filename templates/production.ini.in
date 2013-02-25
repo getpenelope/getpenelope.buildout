@@ -11,12 +11,16 @@ mail.host = localhost
 mail.port = 25
 mail.from_address = noreply@${parts.settings['google']}
 project_name = ${parts.settings['projectname']}
+karma.url = ${parts.settings['karmaurl']}
 
 por.svn.url = ${parts.settings['svnurl']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
 por.dashboard.google_domain = ${parts.settings['google']}
-pyramid.includes = pyramid_exclog pyramid_fanstatic
+pyramid.includes = 
+    pyramid_exclog
+    pyramid_fanstatic
+    ${parts.settings['includes']}
 
 session.type = file
 session.data_dir = ${parts.buildout['directory']}/var/data/sessions/data
