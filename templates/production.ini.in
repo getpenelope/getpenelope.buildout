@@ -1,6 +1,6 @@
 [app:dashboard]
 use = egg:por.dashboard
-pyramid.reload_templates = true
+pyramid.reload_templates = false
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
 pyramid.debug_routematch = false
