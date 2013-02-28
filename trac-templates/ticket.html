@@ -281,7 +281,7 @@ ${ticket.description}</textarea>
                   <div class="ticketfields-label">
                     <label for="field-${field.name}" py:if="field"
                       py:strip="field.type == 'radio'" i18n:msg="field"><i 
-                        class="icon-exclamation-sign" title="Field is required" py:if="field.name in ['customerrequest']"></i>
+                        class="icon-exclamation-sign" title="Field is required" py:if="field.name in ['customerrequest','milestone']"></i>
                       ${field.edit_label or field.label or field.name}:</label>
                   </div>
                   <div>
