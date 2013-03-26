@@ -1,15 +1,49 @@
-$ticket_body_hdr - ${ticket.link}
+<div>  
+  <div style="font-family: Verdana, Arial, Helvetica, sans-serif; background-color:#f8f8f8">
+    <hr>
+    <a style="text-decoration:none;color:#069; font-size: 19px" href="${project.url or abs_href()}"><strong>Database: $project.name</strong></a>
+    <hr>
+    <a style="text-decoration:none;color:#666666; font-size: 17px" href="$ticket.link">$ticket_body_hdr</a>
+    <hr>
+  </div>    
+#choose ticket.new
+  #when True
+    <div style="color:#069; font-size: 15px"><em>New ticket</em> (by <strong>$ticket.reporter</strong>)</div>
+    <br/>
+     <div style="padding:1.5em;">$ticket.description</div>
+    <br/>
+  #end
+  #otherwise
+    #if changes_body
+      <div style="color:#069; font-size: 15px"><em>Changes</em> (by <strong>$change.author</strong>)</div>
+      $changes_body
+    #end
+    #if changes_descr
+      #if not changes_body and not change.comment and change.author
+        <div style="color:#069; font-size: 15px"><em>Description changed by</em> <strong>$change.author</strong></div>
+      #end
+      #if changes_body or change.comment or not change.author
+        <div style="color:#069; font-size: 15px"><em>Description</em></div>
+      #end
+      <div style="padding:1.5em; font-size: 14px">$changes_descr</div>
+      <br/>
+    #end
+    #if change.comment
+      <div style="color:#069;"><em>Comment</em>  ${not changes_body and '(by <strong>%s</strong>)' % change.author or ''}</div>
+      <div style="padding:1.5em;">$change.comment</div>
+      <br/>
+    #end
+  #end
+  <hr/>
+#end
 
-{% choose ticket.new %}\
-{%   when True %}\
-$ticket.description
-{%   end %}\
-{%   otherwise %}\
-{%     if changes_body %}\
-${_('Changes (by %(author)s):', author=change.author)} 
-
-$changes_body{%     end %}{%     if change.comment %}${changes_body and _(' * comment: ') or _('Comment (by %(author)s):\n', author=change.author)}${change.comment.strip()}
-{%     end %}{%   end %}{% end %}\
-
-$ticket_props
-Trac: $project.name <${project.url or abs_href()}>
+<style type="text/css">
+  th { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px }
+  td { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px }
+</style>
+  
+    $ticket_props
+    
+    <hr/>
+    <div style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 13px;background-color:#f0f0f0;color:#999">$project.descr</div>
+</div>

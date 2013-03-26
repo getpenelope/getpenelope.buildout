@@ -1,0 +1,10 @@
+--- trac/tickiet/notification.py	2013-01-08 11:22:24.355211086 +0100
++++ trac/ticket/notification.py	2013-03-26 17:46:11.757391590 +0100
+@@ -385,6 +385,7 @@
+         hdrs['X-Trac-Ticket-ID'] = str(self.ticket.id)
+         hdrs['X-Trac-Ticket-URL'] = self.data['ticket']['link']
+         if not self.newticket:
++            hdrs['Content-type'] = 'text/html; charset=utf-8'
+             msgid = self.get_message_id(dest)
+             hdrs['In-Reply-To'] = msgid
+             hdrs['References'] = msgid

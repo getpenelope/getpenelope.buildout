@@ -1,0 +1,11 @@
+--- trac/notification.py	2013-01-08 11:22:24.263211088 +0100
++++ trac/notification.py	2013-03-26 17:44:09.401391384 +0100
+@@ -454,7 +454,7 @@
+         if pcc:
+             headers['Cc'] = ', '.join(pcc)
+         headers['Date'] = formatdate()
+-        msg = MIMEText(body, 'plain')
++        msg = MIMEText(body, 'html')
+         # Message class computes the wrong type from MIMEText constructor,
+         # which does not take a Charset object as initializer. Reset the
+         # encoding type to force a new, valid evaluation
