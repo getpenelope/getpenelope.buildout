@@ -17,13 +17,16 @@ def release(package):
 
 def production():
     if not 'penelope.production.server' in env \
-            or 'penelope.production.dir' in env:
+            or not 'penelope.production.dir' in env \
+            or not 'penelope.production.user' in env:
         abort('You don\'t have proper production ENV. '
               'Please check your ~/.fabricrc '
               'and ensure that you have two entries:\n' + \
               green('penelope.production.server = example.com\n') + \
+              green('penelope.production.user = user\n') + \
               green('penelope.production.dir = /opt/my_dir'))
-    env.hosts = env['penelope.production.server']
+    env.hosts = [env['penelope.production.server']]
+    env.user = env['penelope.production.user']
 
 def deploy():
     with cd(env['penelope.production.dir']):
