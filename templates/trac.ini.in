@@ -81,7 +81,7 @@ new = new,reopened
 new.order = 2
 
 [mimeviewer]
-max_preview_size = 262144
+max_preview_size = 1024000
 mime_map = text/x-dylan:dylan,text/x-idl:ice,text/x-ada:ads:adb
 pygments_default_style = trac
 pygments_modes = 
