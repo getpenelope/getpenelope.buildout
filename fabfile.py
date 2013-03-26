@@ -48,6 +48,8 @@ def staging():
 def co(package, branch='master'):
     """git checkout [branch] of a specific [package]"""
     with cd('%s/src/%s' % (env.directory, package)):
+        run("git checkout master", quiet=True)
+        run("git pull", quiet=True)
         run('git checkout %s' % branch)
 
 def buildout():
