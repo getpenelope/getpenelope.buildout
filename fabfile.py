@@ -2,7 +2,6 @@ from fabric.api import lcd, local, run, cd, env
 from fabric.utils import abort
 from fabric.colors import green
 
-
 def release(package):
     """ release [package] on pypi and update versions.cfg """
     with lcd('src/%s' % package):
@@ -46,11 +45,18 @@ def staging():
     env.user = env['penelope.staging.user']
 
 def co(package, branch='master'):
-    """git checkout [branch] of a specific [package]"""
+    """{remote} git checkout [branch] of a specific [package]"""
     with cd('%s/src/%s' % (env.directory, package)):
         run("git checkout master", quiet=True)
         run("git pull", quiet=True)
         run('git checkout %s' % branch)
+
+def lco(package, branch='master'):
+    """{local} git checkout [branch] of a specific [package]"""
+    with lcd('src/%s' % package):
+        local("git checkout master", capture=True)
+        local("git pull", capture=True)
+        local('git checkout %s' % branch)
 
 def buildout():
     with cd(env.directory):
