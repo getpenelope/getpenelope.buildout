@@ -59,6 +59,7 @@ def _co(package, branch, _cd, _run, **kwargs):
             print red('package [%s] not found' % package)
             return
     with _cd('%s/%s' % (packages_dir, package)):
+        _run("git pull")
         if not _run('git branch -r | grep %s | cat' % branch, **kwargs):
             print red('[%s] not found for package [%s]' % (branch, package))
             return
