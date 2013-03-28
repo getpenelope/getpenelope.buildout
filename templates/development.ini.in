@@ -11,9 +11,14 @@ mail.host = localhost
 mail.port = 8025
 mail.from_address = admin@${parts.settings['google']}
 
-por.svn.url = ${parts.settings['svnurl']}
 project_name = ${parts.settings['projectname']}
+por.svn.url = ${parts.settings['svnurl']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
+por.svn.envs = ${parts.buildout['directory']}/var/svnenvs
+por.svn.authz = ${parts.buildout['directory']}/var/authz.ini
+por.svn.authz_init = ${parts.buildout['directory']}/etc/svnauth_init.ini
+por.trac.templates = ${parts.buildout['directory']}/trac-templates
+por.trac.masterconfig = ${parts.buildout['directory']}/etc/trac.ini
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
 por.dashboard.google_domain = ${parts.settings['google']}
 pyramid.includes = pyramid_debugtoolbar pyramid_fanstatic

@@ -12,7 +12,11 @@ mail.port = 25
 mail.from_address = noreply@${parts.settings['google']}
 project_name = ${parts.settings['projectname']}
 karma.url = ${parts.settings['karmaurl']}
-
+por.svn.authz = ${parts.buildout['directory']}/var/authz.ini
+por.svn.authz_init = ${parts.buildout['directory']}/etc/svnauth_init.ini
+por.svn.envs = ${parts.buildout['directory']}/var/svnenvs
+por.trac.templates = ${parts.buildout['directory']}/trac-templates
+por.trac.masterconfig = ${parts.buildout['directory']}/etc/trac.ini
 por.svn.url = ${parts.settings['svnurl']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
