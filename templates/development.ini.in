@@ -21,6 +21,8 @@ por.trac.templates = ${parts.buildout['directory']}/trac-templates
 por.trac.masterconfig = ${parts.buildout['directory']}/etc/trac.ini
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
 por.dashboard.google_domain = ${parts.settings['google']}
+por.dashboard.iteration_folder = ${parts.settings['iteration_folder']}
+por.dashboard.iteration_template = ${parts.settings['iteration_template']}
 pyramid.includes = pyramid_debugtoolbar pyramid_fanstatic
 
 session.type = file

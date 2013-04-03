@@ -20,6 +20,8 @@ por.svn.url = ${parts.settings['svnurl']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
 por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
 por.dashboard.google_domain = ${parts.settings['google']}
+por.dashboard.iteration_folder = ${parts.settings['iteration_folder']}
+por.dashboard.iteration_template = ${parts.settings['iteration_template']}
 pyramid.includes = 
     pyramid_exclog
     pyramid_fanstatic
