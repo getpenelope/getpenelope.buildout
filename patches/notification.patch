@@ -1,0 +1,8 @@
+--- trac/notification.py	2013-04-16 12:48:57.152352051 +0200
++++ trac/notification.py	2013-04-16 12:48:48.744352371 +0200
+@@ -463,4 +463,4 @@
+         self.add_headers(msg, headers)
+         self.add_headers(msg, mime_headers)
+         NotificationSystem(self.env).send_email(self.from_email, recipients,
+-                                                msg.as_string())
++                                                msg)
