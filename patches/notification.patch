@@ -5,4 +5,4 @@
          self.add_headers(msg, mime_headers)
          NotificationSystem(self.env).send_email(self.from_email, recipients,
 -                                                msg.as_string())
-+                                                msg)
++                                              {'msg':msg, 'data':self.data})
