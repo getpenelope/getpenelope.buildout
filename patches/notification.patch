@@ -1,8 +1,16 @@
---- trac/notification.py	2013-04-16 12:48:57.152352051 +0200
-+++ trac/notification.py	2013-04-16 12:48:48.744352371 +0200
-@@ -463,4 +463,4 @@
+--- trac/notification.new.py	2013-04-16 16:58:53.728352313 +0200
++++ trac/notification.py	2013-04-16 17:05:29.432351863 +0200
+@@ -462,5 +462,11 @@
+         msg.set_charset(self._charset)
          self.add_headers(msg, headers)
          self.add_headers(msg, mime_headers)
-         NotificationSystem(self.env).send_email(self.from_email, recipients,
+-        NotificationSystem(self.env).send_email(self.from_email, recipients,
 -                                                msg.as_string())
-+                                              {'msg':msg, 'data':self.data})
++        try:
++            NotificationSystem(self.env).send_email(self.from_email, recipients,
++                                                    {'msg': msg,
++                                                     'data': self.data})
++        except AttributeError:
++            NotificationSystem(self.env).send_email(self.from_email, recipients,
++                                                    msg.as_string())
++
