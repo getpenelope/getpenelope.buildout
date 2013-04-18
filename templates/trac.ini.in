@@ -43,6 +43,7 @@ tracrpc.ticket.* = enabled
 tracrpc.web_ui.rpcweb = enabled
 tracrpc.xml_rpc.xmlrpcprotocol = enabled
 tracwysiwyg.wysiwygmodule = enabled
+fulltextsearchplugin.* = enabled
 
 [extra-permissions]
 EXTRA_TIMEENTRY = TIME_ENTRY_ADD
@@ -143,6 +144,8 @@ stats_provider = DefaultTicketGroupStatsProvider
 
 [search]
 min_query_length = 3
+disabled_sources = MilestoneModule, TicketModule, WikiModule
+fulltext_search_realms = ['ticket','wiki', 'attachment']
 
 [svn]
 branches = trunk,branches/*
