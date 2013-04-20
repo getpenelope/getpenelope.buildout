@@ -13,6 +13,7 @@ mail.username = ${parts.settings['mail_username']}
 mail.password = ${parts.settings['mail_password']}
 mail.default_sender = ${parts.settings['mail_default_sender']}
 project_name = ${parts.settings['projectname']}
+por.solr = ${parts.settings['solr']}
 por.svn.authz = ${parts.buildout['directory']}/var/authz.ini
 por.svn.authz_init = ${parts.buildout['directory']}/etc/svnauth_init.ini
 por.svn.envs = ${parts.buildout['directory']}/var/svnenvs
