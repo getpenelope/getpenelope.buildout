@@ -1,6 +1,8 @@
-from fabric.api import lcd, local, run, cd, env, quiet
+from fabric.api import lcd, local, run, cd, env, quiet, sudo, get
 from fabric.utils import abort
 from fabric.colors import green, red
+from fabric.network import needs_host, normalize
+from subprocess import Popen
 
 def release(package):
     """ release [package] on pypi and update versions.cfg """
@@ -102,3 +104,31 @@ def buildout():
         run("git pull")
         run("./bin/buildout -NU")
         run("touch parts/mod_wsgi/wsgi")
+
+def sync_postgres(hostname):
+    with cd('/tmp'):
+        sudo('pg_dump por > /tmp/por.dump', user='postgres')
+    get('/tmp/por.dump', local_path='/tmp')
+    proc = Popen(['sudo','-u', 'postgres', 'dropdb', 'por'])
+    if proc.wait():
+        return
+    proc = Popen(['sudo','-u', 'postgres', 'createdb', 'por'])
+    if proc.wait():
+        return
+    proc = Popen(['sudo','-u', 'postgres', 'psql', '-d', 'por', '-f', '/tmp/por.dump'])
+    if proc.wait():
+        return
+    proc = Popen(['sudo','-u', 'postgres', 'psql', '-d', 'por', '-c', 'update applications set api_uri = replace(api_uri, \'https://penelope.redturtle.it\', \'%s\');' % hostname])
+    if proc.wait():
+        return
+
+@needs_host
+def sync_var():
+    """Sync buildout var folder"""
+    user, host, port = normalize(env.host_string)
+    with quiet():
+        local_buildout = local('pwd', capture=True)
+    cmd = 'rsync --exclude \'data\' --exclude \'.log\' --exclude \'svnenvs\' --exclude \'cache\' -pthrvz %s@%s:%s%s %s%s' % (user, host,
+                                                                                                                            env.directory, '/var/',
+                                                                                                                            local_buildout, '/var/')
+    local(cmd)
