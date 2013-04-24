@@ -103,6 +103,8 @@ def buildout():
     with cd(env.directory):
         run("git pull")
         run("./bin/buildout -NU")
+        run("./bin/solr-instance stop")
+        run("./bin/solr-instance start")
         run("touch parts/mod_wsgi/wsgi")
 
 def sync_postgres(hostname):

@@ -11,6 +11,15 @@ LogLevel warn
 
 RewriteEngine On
 
+AliasMatch ^/trac/(.*)/chrome/(.*) /var/www/static-trac/htdocs/$2
+<Directory "/var/www/static-trac/htdocs">
+  Order allow,deny
+  Allow from all
+</Directory>
+<LocationMatch "/trac/(.*)/chrome">
+  SetHandler None
+</LocationMatch>
+
 WSGIDaemonProcess ${parts.settings['projectname']} user=${parts.apache['user']} group=${parts.apache['user']} processes=2 threads=20 display-name=%{GROUP}
 WSGIScriptAlias / ${parts.buildout['directory']}/parts/mod_wsgi/wsgi
 WSGIProcessGroup ${parts.settings['projectname']}
