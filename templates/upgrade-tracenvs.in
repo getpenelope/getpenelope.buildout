@@ -6,6 +6,6 @@ TRACENVS="${parts.buildout['directory']}/var/tracenvs"
 
 for tracenv in $$TRACENVS/*; do
     echo ">>> `basename $$tracenv` <<<"
-    $$BIN/py $$BIN/trac-admin $$tracenv upgrade
+    $$BIN/trac-admin $$tracenv upgrade
 done
 

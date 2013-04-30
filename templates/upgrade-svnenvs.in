@@ -1,0 +1,21 @@
+#!/bin/bash
+
+BIN="${parts.buildout['directory']}/bin"
+TRACENVS="${parts.buildout['directory']}/var/tracenvs"
+SVNENVS="${parts.buildout['directory']}/var/svnenvs"
+
+
+for svnenv in $$SVNENVS/*; do
+    tracenv=$$TRACENVS/`basename $$svnenv`
+    HOOK="#!/bin/sh\n\n
+    REPOS=\"\$$1\"\n
+    REV=\"\$$2\"\n
+    $${BIN}/trac-admin $${tracenv} changeset added \$$REPOS \$$REV"
+
+    if [ -d "$$tracenv" ]; then
+        echo ">>> `basename $$svnenv` <<<"
+        echo -e $$HOOK > $$svnenv/hooks/post-commit
+        chmod +x $$svnenv/hooks/post-commit
+    fi
+done
+
