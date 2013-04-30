@@ -145,7 +145,7 @@ stats_provider = DefaultTicketGroupStatsProvider
 [search]
 min_query_length = 3
 disabled_sources = MilestoneModule, TicketModule, WikiModule
-fulltext_search_realms = ['ticket','wiki', 'attachment']
+fulltext_search_realms = ['ticket','wiki', 'changeset']
 
 [svn]
 branches = trunk,branches/*
