@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Zope Corporation and Contributors.
+# Copyright (c) 2006 Zope Foundation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -16,305 +16,150 @@
 Simply run this script in a directory containing a buildout.cfg.
 The script accepts buildout command-line options, so you can
 use the -c option to specify an alternate configuration file.
-
-$Id$
 """
 
-import os, shutil, sys, tempfile, urllib2
+import os, shutil, sys, tempfile
 from optparse import OptionParser
 
 tmpeggs = tempfile.mkdtemp()
-is_jython = sys.platform.startswith('java')
 
-# parsing arguments
-parser = OptionParser()
-parser.add_option("-v", "--version", dest="version",
-                          help="use a specific zc.buildout version")
-parser.add_option("-d", "--distribute",
-                   action="store_true", dest="distribute", default=False,
-                   help="Use Distribute rather than Setuptools.")
+usage = '''\
+[DESIRED PYTHON FOR BUILDOUT] bootstrap.py [options]
 
-parser.add_option("-c", None, action="store", dest="config_file",
+Bootstraps a buildout-based project.
+
+Simply run this script in a directory containing a buildout.cfg, using the
+Python that you want bin/buildout to use.
+
+Note that by using --setup-source and --download-base to point to
+local resources, you can keep this script from going over the network.
+'''
+
+parser = OptionParser(usage=usage)
+parser.add_option("-v", "--version", help="use a specific zc.buildout version")
+
+parser.add_option("-t", "--accept-buildout-test-releases",
+                  dest='accept_buildout_test_releases',
+                  action="store_true", default=False,
+                  help=("Normally, if you do not specify a --version, the "
+                        "bootstrap script and buildout gets the newest "
+                        "*final* versions of zc.buildout and its recipes and "
+                        "extensions for you.  If you use this flag, "
+                        "bootstrap and buildout will get the newest releases "
+                        "even if they are alphas or betas."))
+parser.add_option("-c", "--config-file",
                    help=("Specify the path to the buildout configuration "
                          "file to be used."))
+parser.add_option("-f", "--find-links",
+                   help=("Specify a URL to search for buildout releases"))
+
 
 options, args = parser.parse_args()
 
-# if -c was provided, we push it back into args for buildout' main function
-if options.config_file is not None:
-    args += ['-c', options.config_file]
-
-if options.version is not None:
-    VERSION = '==%s' % options.version
-else:
-    VERSION = ''
-
-USE_DISTRIBUTE = options.distribute
-args = args + ['bootstrap']
+######################################################################
+# load/install distribute
 
 to_reload = False
 try:
-    import pkg_resources
-#    if not hasattr(pkg_resources, '_distribute'):
-#        to_reload = True
-#        raise ImportError
+    import pkg_resources, setuptools
+    if not hasattr(pkg_resources, '_distribute'):
+        to_reload = True
+        raise ImportError
 except ImportError:
     ez = {}
-    if USE_DISTRIBUTE:
-        exec urllib2.urlopen('http://python-distribute.org/distribute_setup.py'
-                         ).read() in ez
-        ez['use_setuptools'](to_dir=tmpeggs, download_delay=0, no_fake=True)
-    else:
-        exec urllib2.urlopen('http://peak.telecommunity.com/dist/ez_setup.py'
-                             ).read() in ez
-        ez['use_setuptools'](to_dir=tmpeggs, download_delay=0)
+
+    try:
+        from urllib.request import urlopen
+    except ImportError:
+        from urllib2 import urlopen
+
+    exec(urlopen('http://python-distribute.org/distribute_setup.py').read(), ez)
+    setup_args = dict(to_dir=tmpeggs, download_delay=0, no_fake=True)
+    ez['use_setuptools'](**setup_args)
 
     if to_reload:
         reload(pkg_resources)
-    else:
-        import pkg_resources
+    import pkg_resources
+    # This does not (always?) update the default working set.  We will
+    # do it.
+    for path in sys.path:
+        if path not in pkg_resources.working_set.entries:
+            pkg_resources.working_set.add_entry(path)
 
-def quote (c):
-    return c
+######################################################################
+# Install buildout
 
-cmd = 'from setuptools.command.easy_install import main; main()'
 ws  = pkg_resources.working_set
 
-if USE_DISTRIBUTE:
-    requirement = 'distribute'
-else:
-    requirement = 'setuptools'
+cmd = [sys.executable, '-c',
+       'from setuptools.command.easy_install import main; main()',
+       '-mZqNxd', tmpeggs]
 
-if is_jython:
-    import subprocess
+find_links = os.environ.get(
+    'bootstrap-testing-find-links',
+    options.find_links or
+    ('http://downloads.buildout.org/'
+     if options.accept_buildout_test_releases else None)
+    )
+if find_links:
+    cmd.extend(['-f', find_links])
 
-    assert subprocess.Popen([sys.executable] + ['-c', quote(cmd), '-mqNxd',
-           quote(tmpeggs), 'zc.buildout' + VERSION],
-           env=dict(os.environ,
-               PYTHONPATH=
-               ws.find(pkg_resources.Requirement.parse(requirement)).location
-               ),
-           ).wait() == 0
+distribute_path = ws.find(
+    pkg_resources.Requirement.parse('distribute')).location
 
-else:
-    assert os.spawnle(
-        os.P_WAIT, sys.executable, quote (sys.executable),
-        '-c', quote (cmd), '-mqNxd', quote (tmpeggs), 'zc.buildout' + VERSION,
-        dict(os.environ,
-            PYTHONPATH=
-            ws.find(pkg_resources.Requirement.parse(requirement)).location
-            ),
-        ) == 0
+requirement = 'zc.buildout'
+version = options.version
+if version is None and not options.accept_buildout_test_releases:
+    # Figure out the most recent final version of zc.buildout.
+    import setuptools.package_index
+    _final_parts = '*final-', '*final'
+    def _final_version(parsed_version):
+        for part in parsed_version:
+            if (part[:1] == '*') and (part not in _final_parts):
+                return False
+        return True
+    index = setuptools.package_index.PackageIndex(
+        search_path=[distribute_path])
+    if find_links:
+        index.add_find_links((find_links,))
+    req = pkg_resources.Requirement.parse(requirement)
+    if index.obtain(req) is not None:
+        best = []
+        bestv = None
+        for dist in index[req.project_name]:
+            distv = dist.parsed_version
+            if _final_version(distv):
+                if bestv is None or distv > bestv:
+                    best = [dist]
+                    bestv = distv
+                elif distv == bestv:
+                    best.append(dist)
+        if best:
+            best.sort()
+            version = best[-1].version
+if version:
+    requirement = '=='.join((requirement, version))
+cmd.append(requirement)
+
+import subprocess
+if subprocess.call(cmd, env=dict(os.environ, PYTHONPATH=distribute_path)) != 0:
+    raise Exception(
+        "Failed to execute command:\n%s",
+        repr(cmd)[1:-1])
+
+######################################################################
+# Import and run buildout
 
 ws.add_entry(tmpeggs)
-ws.require('zc.buildout' + VERSION)
+ws.require(requirement)
 import zc.buildout.buildout
 
-def bootstrap(self, args):
+if not [a for a in args if '=' not in a]:
+    args.append('bootstrap')
 
-    self._setup_directories()
+# if -c was provided, we push it back into args for buildout' main function
+if options.config_file is not None:
+    args[0:0] = ['-c', options.config_file]
 
-    # Now copy buildout and setuptools eggs, and record destination eggs:
-    entries = []
-    for name in 'setuptools', 'zc.buildout':
-        r = pkg_resources.Requirement.parse(name)
-        dist = pkg_resources.working_set.find(r)
-        if dist.precedence == pkg_resources.DEVELOP_DIST:
-            dest = os.path.join(self['buildout']['develop-eggs-directory'],
-                                name+'.egg-link')
-            open(dest, 'w').write(dist.location)
-            entries.append(dist.location)
-        else:
-            dest = os.path.join(self['buildout']['eggs-directory'],
-                                os.path.basename(dist.location))
-            entries.append(dest)
-            if not os.path.exists(dest):
-                if os.path.isdir(dist.location):
-                    shutil.copytree(dist.location, dest)
-                else:
-                    shutil.copy2(dist.location, dest)
-
-    # Create buildout script
-    ws = pkg_resources.WorkingSet(entries)
-    ws.require('zc.buildout')
-    zc.buildout.easy_install.scripts(
-        ['zc.buildout'], ws, sys.executable,
-            self['buildout']['bin-directory'])
-
-### monkey_patch
-zc.buildout.easy_install.script_template = zc.buildout.easy_install.script_header + '''\
-%(relative_paths_setup)s
-import sys
-sys.path[0:0] = [
-    %(path)s,
-    ]
-
-%(initialization)s
-import %(module_name)s
-
-#################################
-# RedTurtle URLopener patching  #
-#################################
-
-from urllib import splithost
-import urllib, zc.buildout, urllib2, os
-import getpass
-try:
-    import keyring
-    import ConfigParser
-    KEYRING = True
-except ImportError:
-    KEYRING = False
-
-class PasswordOpener(urllib2.BaseHandler):
-
-    def __init__(self, *args, **kwargs):
-        self.type = 'http'
-        self.auth_cache = {}
-        self.tries = 0
-        self.maxtries = 3
-        self.tries_401 = {'dummy':0}
-
-    def http_error_401(self, url, fp, errcode, errmsg, headers, data=None):
-        """Error 401 -- authentication required.
-        See this URL for a description of the basic authentication scheme:
-        http://www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt"""
-        self.tries_401[url] = self.tries_401.get(url, -1) + 1
-
-        if not 'www-authenticate' in headers:
-            self.parent.http_error_default(self, url, fp,
-                                         errcode, errmsg, headers)
-        stuff = headers['www-authenticate']
-        import re
-        match = re.match('[ \t]*([^ \t]+)[ \t]+realm="([^"]*)"', stuff)
-        if not match:
-            self.parent.http_error_default(self, url, fp,
-                                         errcode, errmsg, headers)
-        scheme, realm = match.groups()
-        if scheme.lower() != 'basic':
-            self.parent.http_error_default(self, url, fp,
-                                         errcode, errmsg, headers)
-        name = 'retry_' + self.type + '_basic_auth'
-        if not isinstance(url, basestring):
-            url = url._Request__r_type
-        if data is None:
-            return getattr(self,name)(url, realm)
-        else:
-            return getattr(self,name)(url, realm, data)
-
-    def retry_http_basic_auth(self, url, realm, data=None):
-        host, selector = splithost(url)
-        i = host.find('@') + 1
-        host = host[i:]
-        user, passwd = self.get_user_passwd(host, realm, i)
-        if not (user or passwd): return None
-        auth = "Basic " + urllib2.unquote(user +':'+ passwd).encode('base64').strip()
-        newurl = 'http://' + host + selector
-        request = urllib2.Request(newurl)
-        request.add_header('Authorization', auth)
-        if data is None:
-            return self.parent.open(request)
-        else:
-            return self.parent.open(request, data)
-
-    def retry_https_basic_auth(self, url, realm, data=None):
-        host, selector = splithost(url)
-        i = host.find('@') + 1
-        host = host[i:]
-        user, passwd = self.get_user_passwd(host, realm, i)
-        if not (user or passwd): return None
-        auth = "Basic " + urllib2.unquote(user + ':' + passwd).encode('base64').strip()
-        newurl = 'https://' + host + selector
-        request = urllib2.Request(newurl)
-        request.add_header('Authorization', auth)
-        return self.parent.open(request, data)
-
-    def get_user_passwd(self, host, realm, clear_cache = 0):
-        key = realm + '@' + host.lower()
-        if key in self.auth_cache:
-            if clear_cache:
-                del self.auth_cache[key]
-            else:
-                return self.auth_cache[key]
-        user, passwd = self.prompt_user_passwd(host, realm)
-        if user or passwd: self.auth_cache[key] = (user, passwd)
-        return user, passwd
-
-    def prompt_user_passwd(self, host, realm):
-        """Override this in a GUI environment!"""
-        if KEYRING:
-            return keyring_prompt(realm, host, max(self.tries_401.values()))
-        else:
-            try:
-                user = raw_input("Enter username for " + realm + " at " + host + ": ")
-                passwd = getpass.getpass("Enter password for " + user + " in " + realm + " at " + host  + ": ")
-                return user, passwd
-            except KeyboardInterrupt:
-                print
-                return None, None
-
-def keyring_prompt(realm, host, tries):
-    #First try to take it from keyring
-    # config file init
-    try:
-        config_file = os.path.join(os.path.expanduser('~'),
-              '.buildout',
-              'keyring.cfg')
-        file(config_file)
-    except IOError, e:
-        open(config_file, 'w').close() 
-
-    config = ConfigParser.SafeConfigParser({ 'username':'', })
-    config.read(config_file)
-    if not config.has_section(realm):
-        config.add_section(realm)
-    username = config.get(realm,'username')
-    password = None
-    if username != '':
-        if tries:
-            keyring.set_password(realm, username, '')
-        else:
-            password = keyring.get_password(realm, username)
-    if not password:
-        username = raw_input("Enter username for " + realm + " at " + host + ": ")
-        password = getpass.getpass("Enter password for " + username + " in " + realm + " at " + host  + ": ")
-
-        config.set(realm, 'username', username)
-        config.write(open(config_file, 'w'))
-
-        # store the password
-        keyring.set_password(realm, username, password)
-    return username, password
-
-
-class CredHandler(urllib.FancyURLopener):
-
-    tries_401 = {'dummy':0}
-
-    def http_error_401(self, url, fp, errcode, errmsg, headers, data=None):
-        """Error 401 -- authentication required.
-        See this URL for a description of the basic authentication scheme:
-        http://www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.txt"""
-        self.tries_401[url] = self.tries_401.get(url, -1) + 1
-        return urllib.FancyURLopener.http_error_401(self,url,fp,errcode,errmsg,headers,data=None)
-
-    def prompt_user_passwd(self, host, realm):
-        if KEYRING:
-            return keyring_prompt(realm, host, max(self.tries_401.values()))
-        else:
-            return urllib.FancyURLopener.prompt_user_passwd(self, host, realm)
-
-
-zc.buildout.download.url_opener = CredHandler()
-urllib2.install_opener(urllib2.build_opener(PasswordOpener))
-
-
-if __name__ == '__main__':
-    %(module_name)s.%(attrs)s(%(arguments)s)
-'''
-
-
-zc.buildout.buildout.Buildout.bootstrap = bootstrap
 zc.buildout.buildout.main(args)
 shutil.rmtree(tmpeggs)
-
