@@ -2,6 +2,7 @@ alembic.ini
 buildout.cfg
 .installed.cfg
 .mr.developer.cfg
+.settings
 etc
 eggs
 lib
