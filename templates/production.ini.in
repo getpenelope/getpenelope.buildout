@@ -72,6 +72,7 @@ scheme = ${parts.settings['prefix']}
 
 [pipeline:main]
 pipeline =
+    raven
     proxy-prefix
     weberror
     tm
@@ -93,6 +94,10 @@ use = egg:fanstatic#fanstatic
 versioning = true
 bottom = true
 minified = true
+
+[filter:raven]
+use = egg:raven#raven
+dsn = ${parts.settings['sentry_dsn']}
 
 [app:tracs]
 use = egg:WSGITrac#tracs
