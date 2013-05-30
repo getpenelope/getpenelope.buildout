@@ -72,7 +72,6 @@ scheme = ${parts.settings['prefix']}
 
 [pipeline:main]
 pipeline =
-    raven
     proxy-prefix
     weberror
     tm
@@ -94,10 +93,6 @@ use = egg:fanstatic#fanstatic
 versioning = true
 bottom = true
 minified = true
-
-[filter:raven]
-use = egg:raven#raven
-dsn = ${parts.settings['sentry_dsn']}
 
 [app:tracs]
 use = egg:WSGITrac#tracs
@@ -123,13 +118,13 @@ port = ${parts.settings['port']}
 # Begin logging configuration
 
 [loggers]
-keys = root, penelope, exc_logger
+keys = root, penelope
 
 [handlers]
-keys = console, penelope, exc_handler
+keys = console, penelope
 
 [formatters]
-keys = generic, exc_formatter
+keys = generic
 
 [logger_root]
 level = WARN
@@ -140,14 +135,9 @@ level = DEBUG
 handlers = penelope
 qualname = penelope
 
-[logger_exc_logger]
-level = ERROR
-handlers = exc_handler
-qualname = exc_logger
-
 [handler_console]
-class = StreamHandler
-args = (sys.stderr,)
+class = raven.handlers.logging.SentryHandler
+args = ('${parts.settings['sentry_dsn']}',)
 level = WARN
 formatter = generic
 
@@ -157,16 +147,7 @@ args = ('${parts.buildout['directory']}/var/log/penelope_debug.log','a')
 level = DEBUG
 formatter = generic
 
-[handler_exc_handler]
-class = FileHandler
-args = ('${parts.buildout['directory']}/var/log/penelope_exception.log',)
-level = ERROR
-formatter = exc_formatter
-
 [formatter_generic]
 format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
-
-[formatter_exc_formatter]
-format = %(asctime)s %(message)s
 
 # End logging configuration
