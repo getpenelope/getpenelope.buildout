@@ -60,7 +60,7 @@ fanstatic.minified = true
 
 [filter:weberror]
 use = egg:WebError#main
-debug = true
+debug = false
 
 [filter:gzip]
 use = egg:Paste#gzip
@@ -74,6 +74,7 @@ scheme = ${parts.settings['prefix']}
 pipeline =
     proxy-prefix
     weberror
+    raven
     tm
     who
     beaker
@@ -87,6 +88,11 @@ use = egg:Paste#urlmap
  
 [pipeline:trac]
 pipeline = fanstatic tracs
+
+[filter:raven]
+use = egg:por.dashboard#raven
+dsn = ${parts.settings['sentry_dsn']}
+site = penelope
 
 [filter:fanstatic]
 use = egg:fanstatic#fanstatic
@@ -136,9 +142,9 @@ handlers = penelope
 qualname = penelope
 
 [handler_console]
-class = raven.handlers.logging.SentryHandler
-args = ('${parts.settings['sentry_dsn']}',)
-level = WARN
+class = StreamHandler
+args = (sys.stderr,)
+level = ERROR
 formatter = generic
 
 [handler_penelope]
