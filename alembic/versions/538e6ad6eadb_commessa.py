@@ -32,12 +32,17 @@ def upgrade():
                     sa.Column('description', sa.Unicode(length=None), nullable=True),
                     sa.PrimaryKeyConstraint(u'id', name=u'contracts_pkey')
                     )
+
     op.alter_column('contracts', u'id', 
                existing_type=sa.INTEGER(), 
                type_=sa.String(length=None, convert_unicode=False, assert_unicode=None, unicode_error=None, _warn_on_bytestring=False), 
                existing_nullable=False, 
                existing_server_default='''nextval('contracts_id_seq'::regclass)''')
+    op.alter_column('customer_requests', u'contract', new_column_name='old_contract_name')
+    op.add_column('customer_requests', sa.Column('contract_id', sa.String(), nullable=True))
 
 
 def downgrade():
     op.drop_table('contracts')
+    op.alter_column('customer_requests', u'old_contract_name', new_column_name='contract')
+    op.drop_column('customer_requests', 'contract_id')
