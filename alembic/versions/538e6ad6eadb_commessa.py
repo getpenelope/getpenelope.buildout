@@ -18,7 +18,7 @@ def upgrade():
     op.create_table(
                     'contracts',
                     sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
-                    sa.Column('name', sa.Unicode(length=None), nullable=True),
+                    sa.Column('name', sa.Unicode(length=None), nullable=False),
                     sa.Column('end_date', sa.Date(), nullable=True),
                     sa.Column('workflow_state', sa.Unicode(length=None), nullable=True),
                     sa.Column('contract_number', sa.Unicode(length=None), nullable=True),
