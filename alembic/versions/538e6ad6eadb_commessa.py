@@ -40,9 +40,11 @@ def upgrade():
                existing_server_default='''nextval('contracts_id_seq'::regclass)''')
     op.alter_column('customer_requests', u'contract', new_column_name='old_contract_name')
     op.add_column('customer_requests', sa.Column('contract_id', sa.String(), nullable=True))
+    op.add_column('time_entries', sa.Column('contract_id', sa.String(), nullable=True))
 
 
 def downgrade():
     op.drop_table('contracts')
     op.alter_column('customer_requests', u'old_contract_name', new_column_name='contract')
     op.drop_column('customer_requests', 'contract_id')
+    op.drop_column('time_entries', 'contract_id')
