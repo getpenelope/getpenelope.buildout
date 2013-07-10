@@ -7,8 +7,8 @@ pyramid.debug_routematch = false
 pyramid.debug_templates = false
 default_locale_name = en
 sa.dashboard.url =  ${parts.dashboard['db_string']}
-mail.host = ${parts.settings['mail_host']}
-mail.port = ${parts.settings['mail_port']}
+mail.host = ${parts.hosts['mail']}
+mail.port = ${parts.ports['mail']}
 mail.username = ${parts.settings['mail_username']}
 mail.password = ${parts.settings['mail_password']}
 mail.default_sender = ${parts.settings['mail_default_sender']}
@@ -107,9 +107,8 @@ config_file = ${parts.buildout['directory']}/etc/who.ini
 
 [server:main]
 use = egg:Paste#http
-host = ${parts.settings['host']}
-port = ${parts.settings['port']}
-
+host = ${parts.hosts['pyramid']}
+port = ${parts.ports['pyramid']}
 
 # Begin logging configuration
 

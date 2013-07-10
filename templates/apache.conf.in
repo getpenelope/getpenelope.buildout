@@ -1,29 +1,8 @@
-WSGIApplicationGroup %{GLOBAL}
 
-<VirtualHost *:${parts.settings['port']}>
+<VirtualHost *:${parts.ports['apache_svn']}>
 
 ServerName ${parts.settings['domain']}
 ServerAdmin webmaster@redturtle.it
-
-CustomLog /var/log/apache2/access-${parts.settings['domain']}.log combined
-ErrorLog /var/log/apache2/error-${parts.settings['domain']}.log
-LogLevel warn
-
-RewriteEngine On
-
-#AliasMatch ^/trac/(.*)/chrome/(.*) /var/www/static-trac/htdocs/$2
-#<Directory "/var/www/static-trac/htdocs">
-#  Order allow,deny
-#  Allow from all
-#</Directory>
-#<LocationMatch "/trac/(.*)/chrome">
-#  SetHandler None
-#</LocationMatch>
-
-WSGIDaemonProcess ${parts.settings['projectname']} user=${parts.apache['user']} group=${parts.apache['user']} processes=2 threads=20 display-name=%{GROUP}
-WSGIScriptAlias / ${parts.buildout['directory']}/parts/mod_wsgi/wsgi
-WSGIProcessGroup ${parts.settings['projectname']}
-WSGIPassAuthorization On
 
 Alias /svn /var/www/svn
 
