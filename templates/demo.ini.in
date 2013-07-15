@@ -1,6 +1,6 @@
 [app:dashboard]
 use = egg:por.dashboard
-pyramid.reload_templates = false
+pyramid.reload_templates = true
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
 pyramid.debug_routematch = false
@@ -106,7 +106,8 @@ use = egg:repoze.who#config
 config_file = ${parts.buildout['directory']}/etc/who.ini
 
 [server:main]
-use = egg:Paste#http
+use = egg:gevent-socketio#paster
+transports = xhr-multipart, xhr-polling, websocket
 host = ${parts.hosts['pyramid']}
 port = ${parts.ports['pyramid']}
 
