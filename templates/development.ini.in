@@ -13,6 +13,7 @@ mail.username = ${parts.settings['mail_username']}
 mail.password = ${parts.settings['mail_password']}
 mail.default_sender = ${parts.settings['mail_default_sender']}
 project_name = ${parts.settings['projectname']}
+karma.url = ${parts.settings['karmaurl']}
 por.solr = ${parts.settings['solr']}
 por.svn.url = ${parts.settings['svnurl']}
 por.trac.envs = ${parts.buildout['directory']}/var/tracenvs
