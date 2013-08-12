@@ -1,5 +1,5 @@
 [app:dashboard]
-use = egg:por.dashboard
+use = egg:penelope.core
 pyramid.reload_templates = true
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
@@ -22,10 +22,10 @@ por.svn.authz = ${parts.buildout['directory']}/var/authz.ini
 por.svn.authz_init = ${parts.buildout['directory']}/etc/svnauth_init.ini
 por.trac.templates = ${parts.buildout['directory']}/trac-templates
 por.trac.masterconfig = ${parts.buildout['directory']}/etc/trac.ini
-por.dashboard.vacancy_email = richiestaferie@${parts.settings['google']}
-por.dashboard.google_domain = ${parts.settings['google']}
-por.dashboard.iteration_folder = ${parts.settings['iteration_folder']}
-por.dashboard.iteration_template = ${parts.settings['iteration_template']}
+penelope.core.vacancy_email = richiestaferie@${parts.settings['google']}
+penelope.core.google_domain = ${parts.settings['google']}
+penelope.core.iteration_folder = ${parts.settings['iteration_folder']}
+penelope.core.iteration_template = ${parts.settings['iteration_template']}
 pyramid.includes = pyramid_debugtoolbar pyramid_fanstatic
 
 session.type = file
@@ -42,7 +42,7 @@ available_themes = overcast
 
 velruse.store = velruse.store.sqlstore.SQLStore
 velruse.store.url = ${parts.dashboard['db_string']}
-velruse.providers = por.dashboard.security.openid2
+velruse.providers = penelope.core.security.openid2
 velruse.openid.store = openid.store.memstore.MemoryStore
 velruse.openid.realm = ${parts.settings['url']}
 
