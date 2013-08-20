@@ -3,6 +3,8 @@ buildout.cfg
 .installed.cfg
 .mr.developer.cfg
 .settings
+.cache
+.coverage
 etc
 eggs
 lib
