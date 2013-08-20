@@ -20,6 +20,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
                     sa.Column('name', sa.Unicode(length=None), nullable=True),
                     sa.Column('json', sa.Unicode(), nullable=True),
+                    sa.Column('board_query', sa.Unicode(), nullable=True),
                     sa.Column('modification_date', sa.DateTime(timezone=False), nullable=True),
                     sa.Column('creation_date', sa.DateTime(timezone=False), nullable=True),
                     sa.Column('author_id', sa.Integer(), nullable=True),
@@ -32,6 +33,11 @@ def upgrade():
                existing_nullable=False, 
                existing_server_default='''nextval('kanban_boards_id_seq'::regclass)''')
 
+    op.create_table('kanban_projects',
+                    sa.Column('project_id', sa.String(), sa.ForeignKey('projects.id')),
+                    sa.Column('kanban_id', sa.Integer(), sa.ForeignKey('kanban_boards.id')),
+                    )
 
 def downgrade():
     op.drop_table('kanban_boards')
+    op.drop_table('kanban_projects')
