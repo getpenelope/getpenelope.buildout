@@ -17,6 +17,7 @@ por.solr = ${parts.settings['solr']}
 por.svn.authz = ${parts.buildout['directory']}/var/authz.ini
 por.svn.authz_init = ${parts.buildout['directory']}/etc/svnauth_init.ini
 por.svn.url = ${parts.settings['svnurl']}
+penelope.ga_tracking_id = ${parts.settings['ga_tracking_id']}
 penelope.svn.envs = ${parts.buildout['directory']}/var/svnenvs
 penelope.trac.templates = ${parts.buildout['directory']}/trac-templates
 penelope.trac.masterconfig = ${parts.buildout['directory']}/etc/trac.ini
