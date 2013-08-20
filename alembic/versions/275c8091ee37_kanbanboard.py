@@ -40,27 +40,34 @@ def upgrade():
 
     op.create_table(
                     'kanban_acl',
-                    sa.Column('board_id', sa.Integer(), sa.ForeignKey('kanban_boards.id'), primary_key=True, nullable=False),
-                    sa.Column('principal', sa.String(), primary_key=True, nullable=False),
-                    sa.Column('permission_name', sa.String(), primary_key=True, nullable=False),
-                    sa.PrimaryKeyConstraint(u'board_id', u'principal', u'permission_name', name=u'kanban_acl_pkey')
+                    sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
+                    sa.Column('board_id', sa.Integer(), sa.ForeignKey('kanban_boards.id'), nullable=False),
+                    sa.PrimaryKeyConstraint(u'id', name=u'kanban_acl_pkey')
                     )
 
-    op.alter_column('kanban_acl', u'board_id', 
+    op.alter_column('kanban_acl', u'id', 
                existing_type=sa.INTEGER(), 
                type_=sa.Integer(),
                existing_nullable=False, 
-               existing_server_default='''nextval('kanban_acl_board_id_seq'::regclass)''')
+               existing_server_default='''nextval('kanban_acl_id_seq'::regclass)''')
 
-    op.alter_column('kanban_acl', u'principal', 
-               existing_nullable=False, 
-               existing_server_default='''nextval('kanban_acl_principal_seq'::regclass)''')
+    op.create_table(
+                    'kanban_acl_principals',
+                    sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
+                    sa.Column('principal', sa.String(), nullable=False),
+                    sa.Column('permission_name', sa.String(), nullable=False),
+                    sa.Column('kanban_acl_id', sa.Integer(), sa.ForeignKey('kanban_acl.id'), nullable=False),
+                    sa.PrimaryKeyConstraint(u'id', name=u'kanban_acl_principals_pkey')
+                    )
 
-    op.alter_column('kanban_acl', u'permission_name', 
+    op.alter_column('kanban_acl_principals', u'id', 
+               existing_type=sa.INTEGER(), 
+               type_=sa.Integer(),
                existing_nullable=False, 
-               existing_server_default='''nextval('kanban_acl_permission_name_seq'::regclass)''')
+               existing_server_default='''nextval('kanban_acl_principals_id_seq'::regclass)''')
 
 def downgrade():
+    op.drop_table('kanban_acl_principals')
     op.drop_table('kanban_acl')
     op.drop_table('kanban_projects')
     op.drop_table('kanban_boards')
