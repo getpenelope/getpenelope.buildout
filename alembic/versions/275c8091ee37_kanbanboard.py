@@ -20,6 +20,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
                     sa.Column('name', sa.Unicode(length=None), nullable=True),
                     sa.Column('json', sa.Unicode(), nullable=True),
+                    sa.Column('board_query', sa.Unicode(), nullable=True),
                     sa.Column('modification_date', sa.DateTime(timezone=False), nullable=True),
                     sa.Column('creation_date', sa.DateTime(timezone=False), nullable=True),
                     sa.Column('author_id', sa.Integer(), nullable=True),
@@ -32,6 +33,41 @@ def upgrade():
                existing_nullable=False, 
                existing_server_default='''nextval('kanban_boards_id_seq'::regclass)''')
 
+    op.create_table('kanban_projects',
+                    sa.Column('project_id', sa.String(), sa.ForeignKey('projects.id')),
+                    sa.Column('kanban_id', sa.Integer(), sa.ForeignKey('kanban_boards.id')),
+                    )
+
+    op.create_table(
+                    'kanban_acl',
+                    sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
+                    sa.Column('board_id', sa.Integer(), sa.ForeignKey('kanban_boards.id'), nullable=False),
+                    sa.PrimaryKeyConstraint(u'id', name=u'kanban_acl_pkey')
+                    )
+
+    op.alter_column('kanban_acl', u'id', 
+               existing_type=sa.INTEGER(), 
+               type_=sa.Integer(),
+               existing_nullable=False, 
+               existing_server_default='''nextval('kanban_acl_id_seq'::regclass)''')
+
+    op.create_table(
+                    'kanban_acl_principals',
+                    sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
+                    sa.Column('principal', sa.String(), nullable=False),
+                    sa.Column('permission_name', sa.String(), nullable=False),
+                    sa.Column('kanban_acl_id', sa.Integer(), sa.ForeignKey('kanban_acl.id'), nullable=False),
+                    sa.PrimaryKeyConstraint(u'id', name=u'kanban_acl_principals_pkey')
+                    )
+
+    op.alter_column('kanban_acl_principals', u'id', 
+               existing_type=sa.INTEGER(), 
+               type_=sa.Integer(),
+               existing_nullable=False, 
+               existing_server_default='''nextval('kanban_acl_principals_id_seq'::regclass)''')
 
 def downgrade():
+    op.drop_table('kanban_acl_principals')
+    op.drop_table('kanban_acl')
+    op.drop_table('kanban_projects')
     op.drop_table('kanban_boards')

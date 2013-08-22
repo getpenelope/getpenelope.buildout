@@ -1,6 +1,6 @@
 [plugin:browserform]
 # identification and challenge
-use = por.dashboard.security:make_plugin
+use = penelope.core.security:make_plugin
 # non rimuovere il doppio slash, sta per "url assoluta"
 login_form_url = //login_form
 login_handler_path = /do_login
@@ -19,15 +19,15 @@ include_ip = False
 
 [plugin:sa_auth]
 use = repoze.who.plugins.sa:make_sa_authenticator
-user_class = por.models.dashboard:User
-dbsession = por.models:DBSession
+user_class = penelope.core.models.dashboard:User
+dbsession = penelope.core.models:DBSession
 user_name_translation = login
 validate_password_translation = check_password
 
 [plugin:sa_md]
 use = repoze.who.plugins.sa:make_sa_user_mdprovider
-user_class = por.models.dashboard:User
-dbsession = por.models:DBSession
+user_class = penelope.core.models.dashboard:User
+dbsession = penelope.core.models:DBSession
 user_name_translation = login
 
 [plugin:basicauth]
@@ -36,7 +36,7 @@ realm = PorAuth
 
 [general]
 request_classifier = repoze.who.classifiers:default_request_classifier
-challenge_decider = por.dashboard.security:challenge_decider
+challenge_decider = penelope.core.security:challenge_decider
 
 [identifiers]
 plugins =
