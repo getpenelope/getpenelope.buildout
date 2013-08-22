@@ -1,6 +1,6 @@
 [app:dashboard]
 use = egg:penelope.core
-pyramid.reload_templates = false
+pyramid.reload_templates = true
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
 pyramid.debug_routematch = false
