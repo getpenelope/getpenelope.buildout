@@ -34,14 +34,14 @@ def upgrade():
                existing_server_default='''nextval('kanban_boards_id_seq'::regclass)''')
 
     op.create_table('kanban_projects',
-                    sa.Column('project_id', sa.String(), sa.ForeignKey('projects.id')),
-                    sa.Column('kanban_id', sa.Integer(), sa.ForeignKey('kanban_boards.id')),
+                    sa.Column('project_id', sa.String(), sa.ForeignKey('projects.id', ondelete="CASCADE")),
+                    sa.Column('kanban_id', sa.Integer(), sa.ForeignKey('kanban_boards.id', ondelete="CASCADE")),
                     )
 
     op.create_table(
                     'kanban_acl',
                     sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
-                    sa.Column('board_id', sa.Integer(), sa.ForeignKey('kanban_boards.id'), nullable=False),
+                    sa.Column('board_id', sa.Integer(), sa.ForeignKey('kanban_boards.id', ondelete="CASCADE"), nullable=False),
                     sa.PrimaryKeyConstraint(u'id', name=u'kanban_acl_pkey')
                     )
 
@@ -56,7 +56,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(), primary_key=True, nullable=False),
                     sa.Column('principal', sa.String(), nullable=False),
                     sa.Column('permission_name', sa.String(), nullable=False),
-                    sa.Column('kanban_acl_id', sa.Integer(), sa.ForeignKey('kanban_acl.id'), nullable=False),
+                    sa.Column('kanban_acl_id', sa.Integer(), sa.ForeignKey('kanban_acl.id', ondelete="CASCADE"), nullable=False),
                     sa.PrimaryKeyConstraint(u'id', name=u'kanban_acl_principals_pkey')
                     )
 
