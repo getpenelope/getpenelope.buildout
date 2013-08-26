@@ -117,7 +117,8 @@ use = egg:repoze.who#config
 config_file = ${parts.buildout['directory']}/etc/who.ini
 
 [server:main]
-use = egg:Paste#http
+use = egg:gevent-socketio#paster
+transports = xhr-multipart, xhr-polling, websocket
 host = ${parts.hosts['pyramid']}
 port = ${parts.ports['pyramid']}
 
