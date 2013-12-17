@@ -4,6 +4,7 @@ from fabric.colors import green, red
 from fabric.network import needs_host, normalize
 from subprocess import Popen
 
+
 def release(package):
     """ release [package] on pypi and update versions.cfg """
     with lcd('src/%s' % package):
@@ -15,6 +16,7 @@ def release(package):
     local("git add versions/production.cfg")
     local("git commit -m 'update production versions for %s'" % package)
     local("git push")
+
 
 def production():
     """Use production server"""
@@ -32,10 +34,12 @@ def production():
     env.hosts = [env['penelope.production.server']]
     env.user = env['penelope.production.user']
 
+
 def dev():
     """Use local development server"""
     with quiet():
         env.directory = local('pwd', capture=True)
+
 
 def staging():
     """Use staging server"""
@@ -52,6 +56,7 @@ def staging():
     env.directory = env['penelope.staging.dir']
     env.hosts = [env['penelope.staging.server']]
     env.user = env['penelope.staging.user']
+
 
 def _co(package, branch, _cd, _run, **kwargs):
     """git checkout [branch] of a specific [package]"""
@@ -70,6 +75,7 @@ def _co(package, branch, _cd, _run, **kwargs):
         _run("git pull")
         _run('git checkout %s' % branch)
 
+
 def co(package, branch='master'):
     """git checkout [branch] of a specific [package]"""
     if not 'directory' in env:
@@ -80,6 +86,7 @@ def co(package, branch='master'):
         else:
             _co(package, branch, lcd, local, capture=True)
 
+
 def _pullower(branch, _cd, _run, **kwargs):
     packages_dir = '%s/src' % env.directory
     with _cd(packages_dir):
@@ -87,6 +94,7 @@ def _pullower(branch, _cd, _run, **kwargs):
         packages = output.split()
     for package in packages:
         _co(package, branch, _cd, _run, **kwargs)
+
 
 def pullower(branch='master'):
     """ tries to pull [branch] from all sources """
@@ -98,6 +106,7 @@ def pullower(branch='master'):
         else:
             _pullower(branch, lcd, local, capture=True)
 
+
 def buildout():
     """Pull buildout, run bin/buildount, touch wsgi"""
     with cd(env.directory):
@@ -106,6 +115,7 @@ def buildout():
         run("./bin/buildout -NU")
         run("./bin/solr-instance start")
         run("touch parts/mod_wsgi/wsgi")
+
 
 def sync_postgres(hostname):
     with cd('/tmp'):
@@ -124,13 +134,14 @@ def sync_postgres(hostname):
     if proc.wait():
         return
 
+
 @needs_host
 def sync_var():
     """Sync buildout var folder"""
     user, host, port = normalize(env.host_string)
     with quiet():
         local_buildout = local('pwd', capture=True)
-    cmd = 'rsync --exclude \'data\' --exclude \'.log\' --exclude \'svnenvs\' --exclude \'cache\' -pthrvz %s@%s:%s%s %s%s' % (user, host,
+    cmd = 'rsync --exclude \'solr\' --exclude \'trac.log\' --exclude \'attachments\' --exclude \'data\' --exclude \'*.log\' --exclude \'svnenvs\' --exclude \'cache\' -pthrvz %s@%s:%s%s %s%s' % (user, host,
                                                                                                                             env.directory, '/var/',
                                                                                                                             local_buildout, '/var/')
     local(cmd)
