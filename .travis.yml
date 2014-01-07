@@ -1,11 +1,10 @@
 language: python
 python:
-  - "2.6"
+  - "2.7"
 before_script:
   - psql -c 'create database dashboard;' -U postgres
 install:
   - easy_install -U setuptools
-  - easy_install -U distribute
-  - python bootstrap.py -c travis.cfg -v 2.1.1
+  - python bootstrap.py -c travis.cfg
   - bin/buildout -c travis.cfg
 script: bin/py.test
