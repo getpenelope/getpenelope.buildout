@@ -5,6 +5,6 @@ before_script:
   - psql -c 'create database dashboard;' -U postgres
 install:
   - easy_install -U setuptools
-  - python bootstrap.py -c travis.cfg
+  - python bootstrap.py -c travis.cfg -v 2.1.1
   - bin/buildout -c travis.cfg
 script: bin/py.test
