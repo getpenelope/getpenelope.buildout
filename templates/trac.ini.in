@@ -169,7 +169,7 @@ default_version =
 default_type = defect
 max_comment_size = 262144
 max_description_size = 262144
-workflow = ConfigurableTicketWorkflow
+workflow = ConfigurableTicketWorkflow,TicketWorkflowOpOwnerPrevious
 preserve_newlines = default
 restrict_owner = true
 
@@ -252,26 +252,40 @@ ticket_show_details = false
 accept = new,reviewing -> assigned
 accept.operations = set_owner_to_self
 accept.permissions = TICKET_MODIFY
+
 leave = * -> *
 leave.default = 1
 leave.operations = leave_status
+
 reassign = new,assigned,accepted,reopened -> assigned
 reassign.operations = set_owner
 reassign.permissions = TICKET_MODIFY
+
+reply = new,assigned,accepted,reopened -> assigned
+reply.default = 2
+reply.name = a quick reply
+reply.operations = set_owner_to_previous
+reply.permissions = TICKET_MODIFY
+
 reassign_reviewing = reviewing -> *
 reassign_reviewing.name = reassign review
 reassign_reviewing.operations = set_owner
 reassign_reviewing.permissions = TICKET_MODIFY
+
 reopen = closed -> reopened
 reopen.operations = del_resolution
 reopen.permissions = TRAC_ADMIN
+
 resolve = new,assigned,reopened,reviewing -> closed
 resolve.operations = set_resolution
 resolve.permissions = TICKET_MODIFY
+
 review = new,assigned,reopened -> reviewing
 review.operations = set_owner
 review.permissions = TICKET_MODIFY
+
 revoke_ownership = new,assigned -> new
+revoke_ownership.name = leave ticket
 revoke_ownership.operations = del_owner
 revoke_ownership.permissions = TICKET_MODIFY
 
