@@ -1,7 +1,7 @@
 # A generic, single database configuration.
 
 [alembic]
-script_location = %(here)s/alembic
+script_location = %(here)s/../alembic
 sqlalchemy.url = ${parts.dashboard['db_string']}
 
 # Logging configuration

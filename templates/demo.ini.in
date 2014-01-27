@@ -4,12 +4,12 @@ pyramid.reload_templates = true
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
 pyramid.debug_routematch = false
-pyramid.debug_templates = false
+pyramid.debug_templates = true
 pyramid.includes = 
     pyramid_exclog
     pyramid_fanstatic
     ${parts.settings['includes']}
-
+debugtoolbar.hosts = 0.0.0.0/0
 default_locale_name = en
 sa.dashboard.url =  ${parts.dashboard['db_string']}
 mail.host = ${parts.hosts['mail']}
