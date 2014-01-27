@@ -1,3 +1,10 @@
+upstream penelope{
+     server ${parts.hosts['pyramid1']}:${parts.ports['pyramid1']};
+}
+upstream penelope_socketio{
+     server ${parts.hosts['pyramid2']}:${parts.ports['pyramid2']};
+}
+
 server {
     listen ${parts.ports['nginx']} default;
 
@@ -6,7 +13,7 @@ server {
     keepalive_timeout 5;
 
     location /fanstatic$ {
-        proxy_pass http://${parts.hosts['pyramid']}:${parts.ports['pyramid']};
+        proxy_pass http://penelope;
         access_log off;
         expires max;
         add_header Pragma public;
@@ -18,15 +25,23 @@ server {
         proxy_set_header Host $$host;
     }
 
-    location / {
-        proxy_pass http://${parts.hosts['pyramid']}:${parts.ports['pyramid']};
+    location /socket.io {
+        proxy_pass http://penelope_socketio;
         proxy_set_header Host $$http_host;
         proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
         proxy_set_header X-Real-IP $$remote_addr;
+
         # WebSocket support (nginx 1.4)
         proxy_http_version 1.1;
         proxy_set_header Upgrade $$http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_redirect off;
+    }
+
+    location / {
+        proxy_pass http://penelope;
+        proxy_set_header Host $$http_host;
+        proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $$remote_addr;
     }
 }
