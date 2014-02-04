@@ -58,6 +58,7 @@ fanstatic.bottom = true
 fanstatic.debug = false
 fanstatic.versioning = true
 fanstatic.minified = true
+fanstatic.bundle = true
 
 [filter:weberror]
 use = egg:WebError#main
