@@ -70,7 +70,7 @@ and log in as:
     john@example.com/john@example.com  (Administrator)
     customer@example.com/customer@example.com (Customer)
 
-or:
+or (requires `./bin/populate_penelope etc/development.ini` to be run in advance):
 
     admin@example.com/admin@example.com (Administrator)
 
