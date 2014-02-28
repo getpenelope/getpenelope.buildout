@@ -4,7 +4,7 @@ python:
   - "2.7"
 before_script:
   - psql -c 'create database dashboard;' -U postgres
-  - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
+  - bash travis-scripts/sauce_connect_setup.sh
 install:
   - pip install --upgrade setuptools
   - python bootstrap.py -c .travis.cfg
