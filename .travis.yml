@@ -1,16 +1,17 @@
 language: python
-python: 
-- "2.7"
-before_script: 
-- psql -c 'create database dashboard;' -U postgres
-- curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
-install: 
-- easy_install -U setuptools
-- python bootstrap.py -c config/travis.cfg -v 2.2.1
-- bin/buildout -c config/travis.cfg
+python:
+  - "2.6"
+  - "2.7"
+before_script:
+  - psql -c 'create database dashboard;' -U postgres
+  - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
+install:
+  - pip install --upgrade setuptools
+  - python bootstrap.py -c .travis.cfg
+  - bin/buildout -c .travis.cfg
 script:
-- bin/nosetests --processes=5 --process-timeout=600 src/penelope.core/penelope/core/tests/test_penelope_web.py
-- bin/py.test
+  - bin/nosetests --processes=5 --process-timeout=600 src/penelope.core/penelope/core/tests/test_penelope_web.py
+  - bin/py.test
 env: 
   global: 
   - secure: Ii0p4f02RWq6VCbVMLYSJrFt8ikpmgOMOphTqae7ArHYRBRImTXIH662SaBq2CYv4kJZcgzbStan9wpgsvCkrauGfywLdMu/nlhZXRqJf6MaedYg6yi4b9puHKRioeFNnNDM08PTg+itmiL0FFVH1gSMrgHFlbhRF8xPRXT0kTs=
