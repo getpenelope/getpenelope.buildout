@@ -3,7 +3,7 @@ python:
   - "2.6"
   - "2.7"
 before_script:
-  - psql -c 'create database dashboard;' -U postgres
+  - psql -c 'create database penelope_travis;' -U postgres
   - bash travis-scripts/sauce_connect_setup.sh
 install:
   - pip install --upgrade setuptools
