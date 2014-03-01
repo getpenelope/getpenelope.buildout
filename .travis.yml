@@ -10,13 +10,13 @@ install:
   - python bootstrap.py -c .travis.cfg
   - bin/buildout -c .travis.cfg
 script:
-  - bin/test
+  - bin/test -m penelope.core.tests.test_robot
 env: 
   global: 
   - secure: Ii0p4f02RWq6VCbVMLYSJrFt8ikpmgOMOphTqae7ArHYRBRImTXIH662SaBq2CYv4kJZcgzbStan9wpgsvCkrauGfywLdMu/nlhZXRqJf6MaedYg6yi4b9puHKRioeFNnNDM08PTg+itmiL0FFVH1gSMrgHFlbhRF8xPRXT0kTs=
   - secure: y5WwcywVrIMrqlnEjC1U9UhBjJ6YWZMKSTeXN2E+QAJreIsX+iOABh+3evbDF7LC5CZzLD+HsYe1xYAM/LZxAAA1NDxGYbdgHdjZZY2u9w9Ic1QB+SXb1vCPYr5agokBJPax+asrOwNSFVafEYzWd3G9ooDVb6YAvf0VVOeYTf8=
   - REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
-  - DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
+  - DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_NUMBER
   matrix:
   - BROWSER=firefox
   - BROWSER=chrome
