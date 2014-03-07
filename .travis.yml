@@ -11,6 +11,7 @@ install:
   - bin/buildout -c .travis.cfg
 script:
   - bin/test -m penelope.core.tests.test_robot
+  - bin/py.test
 env: 
   global: 
   - secure: Ii0p4f02RWq6VCbVMLYSJrFt8ikpmgOMOphTqae7ArHYRBRImTXIH662SaBq2CYv4kJZcgzbStan9wpgsvCkrauGfywLdMu/nlhZXRqJf6MaedYg6yi4b9puHKRioeFNnNDM08PTg+itmiL0FFVH1gSMrgHFlbhRF8xPRXT0kTs=
