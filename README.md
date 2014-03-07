@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/getpenelope/getpenelope.buildout.png)](https://travis-ci.org/getpenelope/getpenelope.buildout)
+[![Selenium Test Status](https://saucelabs.com/browser-matrix/amleczko.svg)](https://saucelabs.com/u/amleczko)
 
 Setup with virtualenv under Debian
 ==================================
