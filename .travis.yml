@@ -30,3 +30,14 @@ env:
   - ROBO_BROWSER="platform:Windows 7,browserName:internet explorer,version:8"
   - ROBO_BROWSER="platform:Windows 7,browserName:opera,version:12"
   - ROBO_BROWSER="platform:OS X 10.8,browserName:safari,version:6"
+matrix:
+  allow_failures:
+  - env: ROBO_BROWSER="platform:OS X 10.8,browserName:iphone,version:6.1,device-orientation:portrait"
+  - env: ROBO_BROWSER="platform:OS X 10.8,browserName:ipad,version:6.1,device-orientation:portrait"
+  - env: ROBO_BROWSER="platform:Linux,browserName:android,version:4.0,device-type:tablet,device-orientation:portrait"
+  - env: ROBO_BROWSER="platform:Windows 8.1,browserName:internet explorer,version:11"
+  - env: ROBO_BROWSER="platform:Windows 7,browserName:internet explorer,version:10"
+  - env: ROBO_BROWSER="platform:Windows 7,browserName:internet explorer,version:9"
+  - env: ROBO_BROWSER="platform:Windows 7,browserName:internet explorer,version:8"
+  - env: ROBO_BROWSER="platform:Windows 7,browserName:opera,version:12"
+  - env: ROBO_BROWSER="platform:OS X 10.8,browserName:safari,version:6"
