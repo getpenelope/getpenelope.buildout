@@ -12,10 +12,14 @@
         <field column="realm" name="realm"/>
         <field column="id" name="id"/>
         <field column="description" name="title"/>
-        <field column="author_id" name="author"/>
         <field column="customer_request_id" name="tags"/>
         <field column="author_id" name="involved"/>
+        <entity name="user"
+          query="select fullname from users where id ='${timeentry.author_id}'">
+          <field column="fullname" name="author"/>
+        </entity>
         <field column="description" name="body"/>
+        <field column="description" name="oneline"/>
     </entity>
   </document>
 </dataConfig>
