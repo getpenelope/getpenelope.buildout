@@ -1,0 +1,21 @@
+<dataConfig>
+  <dataSource type="JdbcDataSource" 
+    driver="org.postgresql.Driver"
+    url="jdbc:postgresql://${parts.settings['jdbc_url']}" 
+    user="${parts.settings['jdbc_user']}" 
+    password="${parts.settings['jdbc_password']}"/>
+  <document>
+    <entity name="timeentry" 
+      query="select 'TimeEntry' as realm, time_entries.* from time_entries">
+        <field column="id" name="doc_id"/>
+        <field column="project_id" name="project"/>
+        <field column="realm" name="realm"/>
+        <field column="id" name="id"/>
+        <field column="description" name="title"/>
+        <field column="author_id" name="author"/>
+        <field column="customer_request_id" name="tags"/>
+        <field column="author_id" name="involved"/>
+        <field column="description" name="body"/>
+    </entity>
+  </document>
+</dataConfig>
