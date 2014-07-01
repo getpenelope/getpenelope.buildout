@@ -6,8 +6,8 @@
     password="${parts.settings['jdbc_password']}"/>
   <document>
     <entity name="timeentry" 
-      query="select 'TimeEntry' as realm, time_entries.* from time_entries"
-      deltaImportQuery="select 'TimeEntry' as realm, time_entries.* from time_entries where id='$${dih.delta.id}'"
+      query="select concat('timeentry:',id) as doc_id,'TimeEntry' as realm, time_entries.* from time_entries"
+      deltaImportQuery="select concat('timeentry:',id) as doc_id, 'TimeEntry' as realm, time_entries.* from time_entries where id='$${dih.delta.id}'"
       deltaQuery="select id from time_entries where modification_date &gt; '$${dih.last_index_time}'">
         <field column="id" name="doc_id"/>
         <field column="project_id" name="project"/>
