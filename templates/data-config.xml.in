@@ -6,7 +6,9 @@
     password="${parts.settings['jdbc_password']}"/>
   <document>
     <entity name="timeentry" 
-      query="select 'TimeEntry' as realm, time_entries.* from time_entries">
+      query="select 'TimeEntry' as realm, time_entries.* from time_entries"
+      deltaImportQuery="select 'TimeEntry' as realm, time_entries.* from time_entries where id='$${dih.delta.id}'"
+      deltaQuery="select id from time_entries where modification_date &gt; '$${dih.last_index_time}'">
         <field column="id" name="doc_id"/>
         <field column="project_id" name="project"/>
         <field column="realm" name="realm"/>
@@ -15,8 +17,8 @@
         <field column="customer_request_id" name="tags"/>
         <field column="author_id" name="involved"/>
         <entity name="user"
-          query="select fullname from users where id ='${timeentry.author_id}'">
-          <field column="fullname" name="author"/>
+          query="select email from users where id ='$${timeentry.author_id}'">
+          <field column="email" name="author"/>
         </entity>
         <field column="description" name="body"/>
         <field column="description" name="oneline"/>
