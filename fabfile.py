@@ -111,10 +111,8 @@ def buildout():
     """Pull buildout, run bin/buildount, touch wsgi"""
     with cd(env.directory):
         run("git pull")
-        run("./bin/solr-instance stop")
         run("./bin/buildout -NU")
-        run("./bin/solr-instance start")
-        run("touch parts/mod_wsgi/wsgi")
+        run("./bin/supervisorctl restart all")
 
 
 def sync_postgres(hostname):
