@@ -201,6 +201,9 @@ sensitive = checkbox
 sensitive.label = Sensitive
 sensitive.show_if_group = administrator|developer
 sensitive.value = 0
+stats_exclude = checkbox
+stats_exclude.label = Exclude from report stats
+stats_exclude.value = false
 
 
 [trac]
