@@ -1,8 +1,8 @@
 # A generic, single database configuration.
 
 [alembic]
-script_location = %(here)s/../alembic
-sqlalchemy.url = ${parts.dashboard['db_string']}
+script_location = penelope.models:migrations
+sqlalchemy.url = ${parts.penelope['db_string']}
 
 # Logging configuration
 [loggers]
