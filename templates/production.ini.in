@@ -72,9 +72,7 @@ scheme = ${parts.settings['prefix']}
 pipeline =
     proxy-prefix
     weberror
-#    raven
     tm
-    who
     beaker
     gzip
     applications
@@ -100,10 +98,6 @@ commit_veto = repoze.tm:default_commit_veto
 
 [filter:beaker]
 use = egg:Beaker#beaker_session
-
-[filter:who]
-use = egg:repoze.who#config
-config_file = ${parts.buildout['directory']}/etc/who.ini
 
 [server:main]
 use = egg:gevent-socketio#paster
