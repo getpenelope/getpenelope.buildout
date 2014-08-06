@@ -2,7 +2,7 @@
 
 [alembic]
 script_location = penelope.models:migrations
-sqlalchemy.url = ${parts.penelope['db_string']}
+sqlalchemy.url = ${parts.settings['db_string']}
 
 # Logging configuration
 [loggers]

@@ -1,4 +1,4 @@
-[app:penelope]
+[app:main]
 use = egg:penelope.api
 
 pyramid.reload_templates = true
@@ -7,7 +7,6 @@ pyramid.debug_notfound = false
 pyramid.debug_routematch = false
 pyramid.debug_templates = true
 pyramid.includes = 
-    pyramid_tm
 
 mako.directories = cornice:templates
 default_locale_name = en
@@ -25,103 +24,10 @@ cache.template_caching.type = memory
 cache.default_term.expire = 300
 cache.calculate_matrix.type = memory
 
-multiauth.policies = ipauth1 ipauth2
-
 [server:main]
 use = egg:gevent-socketio#paster
 host = ${parts.hosts['pyramid']}
 port = ${parts.ports['pyramid']}
-
-[filter:catcherror]
-paste.filter_app_factory = mozsvc.middlewares:make_err_mdw
-
-[pipeline:main]
-pipeline = catcherror
-           penelope
-
-[multiauth:policy:ipauth1]
-use = pyramid_ipauth.IPAuthenticationPolicy.from_settings
-ipaddrs = 123.0.0.0/8
-proxies = 127.0.0.1
-principals = local1
-
-[multiauth:policy:ipauth2]
-use = pyramid_ipauth.IPAuthenticationPolicy.from_settings
-ipaddrs = 124.0.0.0/8
-proxies = 127.0.0.1
-principals = local2
-
-# repoze.who config
-# These settings get used when you config.include("pyramid_whoauth")
-[who:plugin:basicauth]
-use = repoze.who.plugins.basicauth:make_plugin
-realm = 'Sync'
-
-[who:plugin:dummyauth]
-use = pyramid_whoauth.tests:DummyAuthenticator
-
-[who:plugin:browserid]
-use = repoze.who.plugins.browserid:make_plugin
-audiences = localhost:* 127.0.0.1:*
-rememberer_name = authtkt
-# disable SSL cert checking in dev mode
-urlopen = urllib2:urlopen
-
-[who:plugin:digestauth]
-use = repoze.who.plugins.digestauth:make_plugin
-realm = 'Sync'
-get_pwdhash = repoze.who.plugins.digestauth.tests:get_pwdhash
-
-[who:plugin:authtkt]
-use = repoze.who.plugins.auth_tkt:make_plugin
-secret = "OH SO SECRET"
-
-[who:general]
-request_classifier = repoze.who.classifiers:default_request_classifier
-challenge_decider = repoze.who.classifiers:default_challenge_decider
-remote_user_key = REMOTE_USER
-
-[who:identifiers]
-plugins = authtkt browserid
-
-[who:authenticators]
-plugins = authtkt browserid
-
-[who:challengers]
-plugins = browserid
-
-[who:mdproviders]
-plugins =
-
-# ip-based auth config.
-# These settings get used when you config.include("pyramid_ipauth")
-[ipauth]
-principals = moz:internal
-proxies = 127.0.0.1  127.0.0.2
-ipaddrs = 124.124.*.*
-
-[captcha]
-use = false
-public_key = 6Le8OLwSAAAAAK-wkjNPBtHD4Iv50moNFANIalJL
-private_key = 6Le8OLwSAAAAAEKoqfc-DmoF4HNswD7RNdGwxRij
-use_ssl = false
-
-[storage]
-backend = syncstorage.storage.sql.SQLStorage
-sqluri =  ${parts.settings['db_string']}
-standard_collections = false
-use_quota = true
-quota_size = 5120
-pool_size = 100
-pool_recycle = 3600
-reset_on_return = true
-
-[auth]
-backend = services.auth.sql.SQLAuth
-sqluri =  ${parts.settings['db_string']}
-pool_size = 100
-pool_recycle = 3600
-
 
 # Begin logging configuration
 
